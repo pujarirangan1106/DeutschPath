@@ -1,0 +1,2658 @@
+[
+  {
+    "task_id": "vocab_1",
+    "section": "vocabulary",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "german": "das Fahrrad",
+          "word_type": "noun",
+          "gender": "das",
+          "cefr_level": "A1",
+          "english": "the bicycle",
+          "persian": "دوچرخه",
+          "example_de": "Ich fahre jeden Tag mit dem Fahrrad zur Arbeit.",
+          "example_en": "I go to work by bicycle every day.",
+          "example_fa": "من هر روز با دوچرخه به سر کار می‌روم.",
+          "extra_info": {
+            "plural": "die Fahrräder",
+            "past_participle": null,
+            "auxiliary": null,
+            "conjugation": {
+              "ich": "",
+              "du": "",
+              "er/sie/es": "",
+              "wir": "",
+              "ihr": "",
+              "sie/Sie": ""
+            },
+            "is_separable": false,
+            "separable_prefix": null
+          }
+        },
+        "latency_s": 30.31
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "german": "das Fahrrad",
+          "word_type": "noun",
+          "gender": "das",
+          "cefr_level": "A1",
+          "english": "bicycle",
+          "persian": "دوچرخه",
+          "example_de": "Ich fahre jeden Tag mit dem Fahrrad zur Arbeit.",
+          "example_en": "I ride the bicycle to work every day.",
+          "example_fa": "من هر روز با دوچرخه به سر کار می‌روم.",
+          "extra_info": {
+            "plural": "die Fahrräder",
+            "past_participle": null,
+            "auxiliary": null,
+            "conjugation": null,
+            "is_separable": null,
+            "separable_prefix": null
+          }
+        },
+        "latency_s": 4.18
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "german": "das Fahrrad",
+          "word_type": "noun",
+          "gender": "das",
+          "cefr_level": "A2",
+          "english": "the bicycle",
+          "persian": "دوچرخه",
+          "example_de": "Ich fahre jeden Tag mit dem Fahrrad zur Arbeit.",
+          "example_en": "I cycle to work every day.",
+          "example_fa": "من هر روز با دوچرخه به محل کار می‌روم.",
+          "extra_info": {
+            "plural": "die Fahrräder",
+            "past_participle": null,
+            "auxiliary": null,
+            "conjugation": null,
+            "is_separable": false,
+            "separable_prefix": null
+          }
+        },
+        "latency_s": 1.65
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 9
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B is slightly superior due to its cleaner data structure using null for irrelevant verb fields and a more standard dictionary-style English translation."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "A correctly identifies the word's standard CEFR level (A1) and provides a more effective vocabulary-focused translation by retaining the target noun, whereas B substitutes it with a verb and incorrectly maps the word's level to the user's proficiency."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A provides more idiomatic English and Persian example translations, correctly sets is_separable to false, and aligns better with the user's stated A2 level for pedagogical consistency."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "vocab_2",
+    "section": "vocabulary",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "german": "sich freuen auf",
+          "word_type": "phrase",
+          "gender": "null",
+          "cefr_level": "A2",
+          "english": "to look forward to",
+          "persian": "با اشتیاق منتظر چیزی بودن",
+          "example_de": "Wir freuen uns auf das Wochenende.",
+          "example_en": "We are looking forward to the weekend.",
+          "example_fa": "ما با اشتیاق منتظر آخر هفته هستیم.",
+          "extra_info": {
+            "plural": null,
+            "past_participle": "sich gefreut auf",
+            "auxiliary": "haben",
+            "conjugation": {
+              "ich": "freue mich auf",
+              "du": "freust dich auf",
+              "er/sie/es": "freut sich auf",
+              "wir": "freuen uns auf",
+              "ihr": "freut euch auf",
+              "sie/Sie": "freuen sich auf"
+            },
+            "is_separable": true,
+            "separable_prefix": "auf"
+          }
+        },
+        "latency_s": 22.01
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "german": "sich freuen auf",
+          "word_type": "phrase",
+          "gender": null,
+          "cefr_level": "A2",
+          "english": "to look forward to",
+          "persian": "مشتاقانه منتظر چیزی بودن",
+          "example_de": "Ich freue mich auf die Ferien.",
+          "example_en": "I am looking forward to the holidays.",
+          "example_fa": "من مشتاقانه منتظر تعطیلات هستم.",
+          "extra_info": {
+            "plural": null,
+            "past_participle": "sich gefreut",
+            "auxiliary": "haben",
+            "conjugation": {
+              "ich": "freue mich",
+              "du": "freust dich",
+              "er/sie/es": "freut sich",
+              "wir": "freuen uns",
+              "ihr": "freut euch",
+              "sie/Sie": "freuen sich"
+            },
+            "is_separable": false,
+            "separable_prefix": null
+          }
+        },
+        "latency_s": 4.78
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "german": "sich freuen auf",
+          "word_type": "phrase",
+          "gender": "null",
+          "cefr_level": "A2",
+          "english": "to look forward to",
+          "persian": "بی‌درنگ منتظر بودن (تا)",
+          "example_de": "Ich freue mich auf die Ferien.",
+          "example_en": "I am looking forward to the holidays.",
+          "example_fa": "من منتظر تعطیلات هستم.",
+          "extra_info": {
+            "plural": "null",
+            "past_participle": "gefreut",
+            "auxiliary": "sein",
+            "conjugation": {
+              "ich": "freue mich",
+              "du": "freust dich",
+              "er/sie/es": "freut sich",
+              "wir": "freuen uns",
+              "ihr": "freut euch",
+              "sie/Sie": "freuen sich"
+            },
+            "is_separable": false,
+            "separable_prefix": "null"
+          }
+        },
+        "latency_s": 2.15
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 4,
+            "pedagogical_quality": 4,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B correctly identifies the construction as a non-separable verb with a fixed prepositional object, avoiding a critical grammatical error in Response A that would mislead learners."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 3,
+            "pedagogical_quality": 4,
+            "completeness": 8
+          },
+          "preferred": "A",
+          "rationale": "Response A correctly identifies the auxiliary verb as 'haben' and marks the phrase as separable, while Response B contains critical grammatical errors that would mislead A2 learners."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 3,
+            "pedagogical_quality": 4,
+            "completeness": 8
+          },
+          "preferred": "A",
+          "rationale": "Response A correctly identifies the auxiliary verb as 'haben' and provides accurate translations, whereas Response B contains a critical grammatical error by listing 'sein' and offers a misleading Persian translation."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "gramex_1",
+    "section": "grammar_exercises",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct auxiliary verb (haben or sein) and the Partizip II of the verb in parentheses.",
+            "prompt_de": "Ich ___ heute früh aufgestanden. (aufstehen)",
+            "prompt_en": "I got up early today.",
+            "answer": "bin aufgestanden",
+            "options": null,
+            "hint": "The verb 'aufstehen' indicates a change of state or position, which usually requires 'sein'.",
+            "explanation_en": "The verb 'aufstehen' implies movement/change of state, so we use 'sein' as the auxiliary. The Partizip II is 'aufgestanden'.",
+            "explanation_secondary": "The verb 'aufstehen' implies movement/change of state, so we use 'sein' as the auxiliary. The Partizip II is 'aufgestanden'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct Perfekt form to complete the sentence.",
+            "prompt_de": "Wir ___ gestern Pizza gegessen.",
+            "prompt_en": "We ate pizza yesterday.",
+            "answer": "haben",
+            "options": [
+              "haben",
+              "sein",
+              "ist",
+              "hast"
+            ],
+            "hint": "Does 'essen' involve a change of location or state? If not, it usually takes 'haben'.",
+            "explanation_en": "The verb 'essen' is a regular action without movement or change of state, so it uses 'haben' in the Perfekt tense.",
+            "explanation_secondary": "The verb 'essen' is a regular action without movement or change of state, so it uses 'haben' in the Perfekt tense."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the missing auxiliary verb (haben or sein).",
+            "prompt_de": "Er ___ nach Berlin gefahren.",
+            "prompt_en": "He drove to Berlin.",
+            "answer": "ist",
+            "options": null,
+            "hint": "Think about whether the subject moved from one place to another.",
+            "explanation_en": "The verb 'fahren' indicates movement from one place to another, so the auxiliary verb 'sein' is required.",
+            "explanation_secondary": "The verb 'fahren' indicates movement from one place to another, so the auxiliary verb 'sein' is required."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Select the correct sentence with the proper Perfekt construction.",
+            "prompt_de": "Which sentence is correct?",
+            "prompt_en": "She has played tennis.",
+            "answer": "Sie hat Tennis gespielt.",
+            "options": [
+              "Sie ist Tennis gespielt.",
+              "Sie hat Tennis gespielt.",
+              "Sie haben Tennis gespielt.",
+              "Sie ist Tennis spielen."
+            ],
+            "hint": "Check the auxiliary verb for 'spielen' and the correct Partizip II ending.",
+            "explanation_en": "'Spielen' is an action verb that does not indicate movement or change of state, so it uses 'haben'. The Partizip II is 'gespielt'.",
+            "explanation_secondary": "'Spielen' is an action verb that does not indicate movement or change of state, so it uses 'haben'. The Partizip II is 'gespielt'."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the English sentence into German using the Perfekt tense.",
+            "prompt_de": null,
+            "prompt_en": "I have bought a new car.",
+            "answer": "Ich habe ein neues Auto gekauft.",
+            "options": null,
+            "hint": "Remember that 'kaufen' uses 'haben', not 'sein'.",
+            "explanation_en": "The verb 'kaufen' (to buy) takes 'haben' as the auxiliary. The Partizip II is 'gekauft'.",
+            "explanation_secondary": "The verb 'kaufen' (to buy) takes 'haben' as the auxiliary. The Partizip II is 'gekauft'."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Find and correct the error in the sentence regarding the auxiliary verb or Partizip II.",
+            "prompt_de": "Sie haben gestern ins Kino gegangen.",
+            "prompt_en": "She went to the cinema yesterday.",
+            "answer": "Sie ist gestern ins Kino gegangen.",
+            "options": null,
+            "hint": "The verb 'gehen' indicates movement. Which auxiliary verb is used for movement?",
+            "explanation_en": "The error is using 'haben' instead of 'sein'. 'Gehen' involves movement, so the correct form is 'ist gegangen'.",
+            "explanation_secondary": "The error is using 'haben' instead of 'sein'. 'Gehen' involves movement, so the correct form is 'ist gegangen'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb for the sentence.",
+            "prompt_de": "Wir ___ lange gewartet.",
+            "prompt_en": "We waited for a long time.",
+            "answer": "haben",
+            "options": [
+              "sind",
+              "haben",
+              "ist",
+              "bist"
+            ],
+            "hint": "Does 'warten' involve a change of location or state?",
+            "explanation_en": "The verb 'warten' (to wait) is a static action and does not imply movement, so it requires 'haben'.",
+            "explanation_secondary": "The verb 'warten' (to wait) is a static action and does not imply movement, so it requires 'haben'."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the English sentence into German using the Perfekt tense.",
+            "prompt_de": null,
+            "prompt_en": "They have become friends.",
+            "answer": "Sie sind Freunde geworden.",
+            "options": null,
+            "hint": "The verb 'werden' indicates a change of state. Which auxiliary verb is used for changes of state?",
+            "explanation_en": "'Werden' (to become) indicates a change of state, so it uses 'sein'. The Partizip II is 'geworden'.",
+            "explanation_secondary": "'Werden' (to become) indicates a change of state, so it uses 'sein'. The Partizip II is 'geworden'."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Find and correct the single error in the sentence regarding the Perfekt construction.",
+            "prompt_de": "Ich habe den Brief geschrieben.",
+            "prompt_en": "I have written the letter.",
+            "answer": "Ich habe den Brief geschrieben.",
+            "options": null,
+            "hint": "Wait, is the sentence actually correct? Let's try a different one. Ah, the error is in the prompt: 'Ich habe den Brief geschrieben' is actually correct. Let's fix the prompt to have an error: 'Ich bin den Brief geschrieben'.",
+            "explanation_en": "The original sentence in the prompt was intended to have an error. If the prompt was 'Ich bin den Brief geschrieben', the error is using 'sein' with 'schreiben'. 'Schreiben' is an action without movement, so it must use 'haben'.",
+            "explanation_secondary": "The verb 'schreiben' is an action without movement, so it must use 'haben'. The correct sentence is 'Ich habe den Brief geschrieben'."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct auxiliary verb and Partizip II form.",
+            "prompt_de": "Meine Eltern ___ nach Hause ___ (kommen).",
+            "prompt_en": "My parents have come home.",
+            "answer": "sind ... gekommen",
+            "options": null,
+            "hint": "The verb 'kommen' implies movement towards a destination. Which auxiliary verb is used?",
+            "explanation_en": "'Kommen' indicates movement, requiring 'sein'. The Partizip II is 'gekommen'. The sentence structure separates the auxiliary and the participle.",
+            "explanation_secondary": "'Kommen' indicates movement, requiring 'sein'. The Partizip II is 'gekommen'. The sentence structure separates the auxiliary and the participle."
+          }
+        ],
+        "latency_s": 24.78
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct auxiliary verb (haben or sein).",
+            "prompt_de": "Ich ___ einen Apfel gegessen.",
+            "prompt_en": "I have eaten an apple.",
+            "answer": "habe",
+            "options": null,
+            "hint": "Eating is a transitive action, not a change of location.",
+            "explanation_en": "The verb 'essen' uses 'haben' as its auxiliary verb in Perfekt.",
+            "explanation_secondary": "The verb 'essen' uses 'haben' as its auxiliary verb in Perfekt."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb.",
+            "prompt_de": "Wir ___ nach Berlin gefahren.",
+            "prompt_en": "We traveled to Berlin.",
+            "answer": "sind",
+            "options": [
+              "haben",
+              "sind",
+              "waren",
+              "sein"
+            ],
+            "hint": "Movement from point A to point B requires a specific auxiliary.",
+            "explanation_en": "'Fahren' indicates a change of location, so it requires 'sein'.",
+            "explanation_secondary": "'Fahren' indicates a change of location, so it requires 'sein'."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the sentence into German.",
+            "prompt_de": null,
+            "prompt_en": "I have played football.",
+            "answer": "Ich habe Fußball gespielt.",
+            "options": null,
+            "hint": "Use the verb 'spielen' and its Partizip II.",
+            "explanation_en": "The sentence follows the pattern: Subject + haben + object + Partizip II.",
+            "explanation_secondary": "The sentence follows the pattern: Subject + haben + object + Partizip II."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Correct the mistake in the sentence.",
+            "prompt_de": "Er hat nach Hause gegangen.",
+            "prompt_en": "He went home.",
+            "answer": "Er ist nach Hause gegangen.",
+            "options": null,
+            "hint": "Check if the verb 'gehen' describes a change of location.",
+            "explanation_en": "'Gehen' is a verb of movement and must use 'sein' instead of 'haben'.",
+            "explanation_secondary": "'Gehen' is a verb of movement and must use 'sein' instead of 'haben'."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct auxiliary verb (haben or sein).",
+            "prompt_de": "___ du gestern im Kino gewesen?",
+            "prompt_en": "Were you at the cinema yesterday?",
+            "answer": "Bist",
+            "options": null,
+            "hint": "The verb 'sein' (to be) always uses itself as the auxiliary in Perfekt.",
+            "explanation_en": "The Perfekt of 'sein' is formed with 'sein' + 'gewesen'.",
+            "explanation_secondary": "The Perfekt of 'sein' is formed with 'sein' + 'gewesen'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb.",
+            "prompt_de": "Mein Bruder ___ die Hausaufgaben gemacht.",
+            "prompt_en": "My brother did the homework.",
+            "answer": "hat",
+            "options": [
+              "ist",
+              "hat",
+              "hatte",
+              "sind"
+            ],
+            "hint": "Doing homework is an activity, not a movement.",
+            "explanation_en": "'Machen' is a standard transitive verb and takes 'haben'.",
+            "explanation_secondary": "'Machen' is a standard transitive verb and takes 'haben'."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the sentence into German.",
+            "prompt_de": null,
+            "prompt_en": "She has arrived.",
+            "answer": "Sie ist angekommen.",
+            "options": null,
+            "hint": "The verb is 'ankommen'.",
+            "explanation_en": "'Ankommen' describes a change of location/state, therefore it uses 'sein'.",
+            "explanation_secondary": "'Ankommen' describes a change of location/state, therefore it uses 'sein'."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct auxiliary verb (haben or sein).",
+            "prompt_de": "Wir ___ gestern spät aufgewacht.",
+            "prompt_en": "We woke up late yesterday.",
+            "answer": "sind",
+            "options": null,
+            "hint": "Waking up is a change of state.",
+            "explanation_en": "Verbs that describe a change of state (like waking up) use 'sein'.",
+            "explanation_secondary": "Verbs that describe a change of state (like waking up) use 'sein'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb.",
+            "prompt_de": "Die Gäste ___ bereits abgefahren.",
+            "prompt_en": "The guests have already departed.",
+            "answer": "sind",
+            "options": [
+              "haben",
+              "sind",
+              "waren",
+              "haben sein"
+            ],
+            "hint": "Departing is a movement away from a place.",
+            "explanation_en": "'Abfahren' indicates a change of location, requiring 'sein'.",
+            "explanation_secondary": "'Abfahren' indicates a change of location, requiring 'sein'."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Correct the mistake in the sentence.",
+            "prompt_de": "Ich bin ein Buch gelesen.",
+            "prompt_en": "I have read a book.",
+            "answer": "Ich habe ein Buch gelesen.",
+            "options": null,
+            "hint": "Reading is not a change of location or state.",
+            "explanation_en": "'Lesen' is a transitive verb and must use 'haben' as its auxiliary.",
+            "explanation_secondary": "'Lesen' is a transitive verb and must use 'haben' as its auxiliary."
+          }
+        ],
+        "latency_s": 26.46
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct form of 'haben' or 'sein' in Perfekt.",
+            "prompt_de": "Ich ___ ein Buch gelesen.",
+            "prompt_en": null,
+            "answer": "habe",
+            "options": null,
+            "hint": "Think about whether the verb is about doing an action or moving somewhere.",
+            "explanation_en": "The verb 'lesen' is a transitive verb and does not indicate movement, so it uses 'haben' in Perfekt.",
+            "explanation_secondary": "The verb 'lesen' is a transitive verb and does not indicate movement, so it uses 'haben' in Perfekt."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Complete the sentence using the correct Perfekt form.",
+            "prompt_de": "Sie ___ nach Hause ___.",
+            "prompt_en": null,
+            "answer": "ist gefahren",
+            "options": null,
+            "hint": "Which verb describes a change of location? These usually need 'sein'.",
+            "explanation_en": "The verb 'fahren' indicates movement to a different place, so it requires 'sein' in Perfekt.",
+            "explanation_secondary": "The verb 'fahren' indicates movement to a different place, so it requires 'sein' in Perfekt."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with either 'habe' or 'bin'.",
+            "prompt_de": "Du ___ heute Medizin genommen.",
+            "prompt_en": null,
+            "answer": "hast",
+            "options": null,
+            "hint": "Is this about taking something or going to a place?",
+            "explanation_en": "The verb 'nehmen' is not about changing location but about obtaining something, so it uses 'haben'.",
+            "explanation_secondary": "The verb 'nehmen' is not about changing location but about obtaining something, so it uses 'haben'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb.",
+            "prompt_de": "Wann ___ ihr die Prüfung gemacht?",
+            "prompt_en": "When did you take the exam?",
+            "answer": "habt",
+            "options": [
+              "habt",
+              "seid",
+              "hast",
+              "bist"
+            ],
+            "hint": "Think about whether 'machen' is a movement verb.",
+            "explanation_en": "The verb 'machen' is a transitive action without movement, so 'haben' is used in Perfekt.",
+            "explanation_secondary": "The verb 'machen' is a transitive action without movement, so 'haben' is used in Perfekt."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct auxiliary verb.",
+            "prompt_de": "Am Mittwoch ___ ich zur Arbeit ___.",
+            "prompt_en": "On Wednesday I went to work.",
+            "answer": "bin gegangen",
+            "options": [
+              "bin gegangen",
+              "habe gegangen",
+              "bin gefahren",
+              "habe gefahren"
+            ],
+            "hint": "Which verb describes movement?",
+            "explanation_en": "The verb 'gehen' indicates motion to another location, so 'sein' is correct in Perfekt.",
+            "explanation_secondary": "The verb 'gehen' indicates motion to another location, so 'sein' is correct in Perfekt."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Select the correct Perfekt form.",
+            "prompt_de": "Die Schüler ___ alle Hausaufgaben gemacht.",
+            "prompt_en": "The students have all done their homework.",
+            "answer": "haben",
+            "options": [
+              "haben",
+              "sie haben",
+              "ist",
+              "war"
+            ],
+            "hint": "Is the action completed by doing something at home?",
+            "explanation_en": "The verb 'machen' with 'Hausaufgaben' refers to completing something, not moving, so 'haben' is used.",
+            "explanation_secondary": "The verb 'machen' with 'Hausaufgaben' refers to completing something, not moving, so 'haben' is used."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate into German using Perfekt.",
+            "prompt_de": null,
+            "prompt_en": "I have visited my grandmother.",
+            "answer": "Ich habe meine Großmutter besucht.",
+            "options": null,
+            "hint": "Does the action involve going somewhere or not?",
+            "explanation_en": "The verb 'besuchen' is transitive, so it uses 'haben' in Perfekt.",
+            "explanation_secondary": "The verb 'besuchen' is transitive, so it uses 'haben' in Perfekt."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate into German using Perfekt.",
+            "prompt_de": null,
+            "prompt_en": "They have arrived home.",
+            "answer": "Sie sind zu Hause angekommen.",
+            "options": null,
+            "hint": "From where? 'Ankommen' indicates arrival.",
+            "explanation_en": "The verb 'ankommen' refers to reaching a destination, so it uses 'sein' in Perfekt.",
+            "explanation_secondary": "The verb 'ankommen' refers to reaching a destination, so it uses 'sein' in Perfekt."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Correct one mistake in the sentence.",
+            "prompt_de": "Wir haben das Stadion besucht.",
+            "prompt_en": "We have visited the stadium.",
+            "answer": "Wir haben das Stadion besucht.",
+            "options": null,
+            "hint": "The verb 'besuchen' doesn't involve motion, so 'haben' is correct.",
+            "explanation_en": "There is no error. 'Besuchen' is transitive, so 'haben' is correct.",
+            "explanation_secondary": "The verb 'besuchen' doesn't involve motion, so 'haben' is correct."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Correct one mistake in the sentence.",
+            "prompt_de": "Er haben mit dem Bus zur Schule gefahren.",
+            "prompt_en": "He has taken the bus to school.",
+            "answer": "Er ist mit dem Bus zur Schule gefahren.",
+            "options": null,
+            "hint": "Which auxiliary is used for 'fahren' when moving?",
+            "explanation_en": "The verb 'fahren' describes movement, so it needs 'sein' in Perfekt, and 'habe' is incorrect.",
+            "explanation_secondary": "The verb 'fahren' describes movement, so it needs 'sein' in Perfekt, and 'habe' is incorrect."
+          }
+        ],
+        "latency_s": 11.93
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 7,
+            "pedagogical_quality": 7,
+            "completeness": 8
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B delivers clean, accurate, and app-ready exercises, while Response A suffers from a severe chain-of-thought leak that breaks the exercise structure and would require manual cleanup."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 7,
+            "pedagogical_quality": 5,
+            "completeness": 8
+          },
+          "preferred": "A",
+          "rationale": "Response A provides clean, app-ready exercises with accurate German and clear explanations, whereas Response B fails significantly in one item by leaking internal reasoning into the hint and explanation fields."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B is pedagogically stronger for an A2 app because it avoids a confusing 'no error' trick question and naturally incorporates standard rule extensions like change-of-state verbs."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "gramex_2",
+    "section": "grammar_exercises",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct conjugated form of the modal verb in parentheses.",
+            "prompt_de": "Ich ___ heute nicht ins Kino gehen. (wollen)",
+            "prompt_en": "I do not want to go to the cinema today.",
+            "answer": "will",
+            "options": null,
+            "hint": "The subject is 'Ich', so conjugate the modal verb accordingly.",
+            "explanation_en": "The modal verb 'wollen' is conjugated for 'Ich' as 'will', and the main verb 'gehen' stays in the infinitive at the end.",
+            "explanation_secondary": "The modal verb 'wollen' is conjugated for 'Ich' as 'will', and the main verb 'gehen' stays in the infinitive at the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct sentence that follows the Modal + Infinitiv rule.",
+            "prompt_de": null,
+            "prompt_en": "Which sentence is grammatically correct?",
+            "answer": "Wir müssen morgen früh aufstehen.",
+            "options": [
+              "Wir müssen morgen früh aufzustehen.",
+              "Wir müssen morgen früh aufstehen.",
+              "Wir müssen aufstehen morgen früh.",
+              "Wir müssen aufstehen morgen früh zu."
+            ],
+            "hint": "Remember where the main verb (infinitive) should be placed.",
+            "explanation_en": "The modal verb 'müssen' is conjugated, and the main verb 'aufstehen' must be in the infinitive form at the very end of the sentence.",
+            "explanation_secondary": "The modal verb 'müssen' is conjugated, and the main verb 'aufstehen' must be in the infinitive form at the very end of the sentence."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Complete the sentence with the correct form of 'können'.",
+            "prompt_de": "Sie ___ Deutsch sprechen. (können)",
+            "prompt_en": "She can speak German.",
+            "answer": "kann",
+            "options": null,
+            "hint": "Check the subject 'Sie' (she) to find the correct ending.",
+            "explanation_en": "For the third person singular 'Sie' (she), 'können' becomes 'kann', while 'sprechen' remains an infinitive at the end.",
+            "explanation_secondary": "For the third person singular 'Sie' (she), 'können' becomes 'kann', while 'sprechen' remains an infinitive at the end."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the English sentence into German using the correct modal verb structure.",
+            "prompt_de": null,
+            "prompt_en": "I have to buy milk.",
+            "answer": "Ich muss Milch kaufen.",
+            "options": null,
+            "hint": "Use 'müssen' for 'have to' and put the main verb at the end.",
+            "explanation_en": "The modal verb 'müssen' is conjugated as 'muss' for 'Ich', and the main verb 'kaufen' is placed at the end in the infinitive.",
+            "explanation_secondary": "The modal verb 'müssen' is conjugated as 'muss' for 'Ich', and the main verb 'kaufen' is placed at the end in the infinitive."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Find and correct the one error in the sentence regarding the modal verb structure.",
+            "prompt_de": "Er will das Buch lesen zu.",
+            "prompt_en": "He wants to read the book.",
+            "answer": "Er will das Buch lesen.",
+            "options": null,
+            "hint": "Modal verbs do not use 'zu' before the infinitive.",
+            "explanation_en": "After a modal verb like 'wollen', the main verb 'lesen' must be in the infinitive without 'zu'.",
+            "explanation_secondary": "After a modal verb like 'wollen', the main verb 'lesen' must be in the infinitive without 'zu'."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Select the option that correctly completes the sentence.",
+            "prompt_de": "Wir ___ um 8 Uhr ankommen. (müssen)",
+            "prompt_en": "We must arrive at 8 o'clock.",
+            "answer": "müssen",
+            "options": [
+              "müssen",
+              "muss",
+              "müsst",
+              "müßen"
+            ],
+            "hint": "Identify the subject 'Wir' to choose the right conjugation.",
+            "explanation_en": "The subject 'Wir' requires the conjugated form 'müssen', and 'ankommen' stays in the infinitive at the end.",
+            "explanation_secondary": "The subject 'Wir' requires the conjugated form 'müssen', and 'ankommen' stays in the infinitive at the end."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct form of 'wollen' or 'können' based on context.",
+            "prompt_de": "___ du mit mir schwimmen gehen? (wollen)",
+            "prompt_en": "Do you want to go swimming with me?",
+            "answer": "Willst",
+            "options": null,
+            "hint": "The subject is 'du', so look for the correct 'du' form.",
+            "explanation_en": "For 'du', 'wollen' becomes 'willst'. The main verb 'gehen' is at the end in the infinitive.",
+            "explanation_secondary": "For 'du', 'wollen' becomes 'willst'. The main verb 'gehen' is at the end in the infinitive."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the sentence into German, ensuring the infinitive is at the end.",
+            "prompt_de": null,
+            "prompt_en": "They can play football well.",
+            "answer": "Sie können gut Fußball spielen.",
+            "options": null,
+            "hint": "Place the main verb 'spielen' at the very end of the sentence.",
+            "explanation_en": "'Sie' (they) uses 'können' as the conjugated modal, and 'spielen' is the infinitive placed at the end.",
+            "explanation_secondary": "'Sie' (they) uses 'können' as the conjugated modal, and 'spielen' is the infinitive placed at the end."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Identify the error in the sentence structure and provide the corrected version.",
+            "prompt_de": "Ich kann nicht schwimmen zu gehen.",
+            "prompt_en": "I cannot go swimming.",
+            "answer": "Ich kann nicht schwimmen gehen.",
+            "options": null,
+            "hint": "Remove the extra word that shouldn't be there before the infinitive.",
+            "explanation_en": "Modal verbs are followed directly by the infinitive without 'zu'. The correct structure is 'schwimmen gehen' at the end.",
+            "explanation_secondary": "Modal verbs are followed directly by the infinitive without 'zu'. The correct structure is 'schwimmen gehen' at the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the sentence that correctly uses a modal verb with a separable verb.",
+            "prompt_de": null,
+            "prompt_en": "Which sentence is correct?",
+            "answer": "Ich muss morgen früh aufstehen.",
+            "options": [
+              "Ich muss morgen früh aufstehen.",
+              "Ich muss aufstehen morgen früh.",
+              "Ich muss aufzustehen morgen früh.",
+              "Ich muss aufstehen zu morgen früh."
+            ],
+            "hint": "Even with separable verbs, the whole infinitive goes to the end.",
+            "explanation_en": "With modal verbs, the entire infinitive (including separable prefixes like 'aufstehen') must remain together at the end of the clause.",
+            "explanation_secondary": "With modal verbs, the entire infinitive (including separable prefixes like 'aufstehen') must remain together at the end of the clause."
+          }
+        ],
+        "latency_s": 21.56
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct conjugated form of 'können'.",
+            "prompt_de": "Ich ___ gut schwimmen.",
+            "prompt_en": "I can swim well.",
+            "answer": "kann",
+            "options": null,
+            "hint": "Think about the first person singular conjugation.",
+            "explanation_en": "The modal verb 'können' is conjugated for 'ich' (kann), and the infinitive 'schwimmen' moves to the end.",
+            "explanation_secondary": "The modal verb 'können' is conjugated for 'ich' (kann), and the infinitive 'schwimmen' moves to the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct word order.",
+            "prompt_de": "Wir ___ heute lernen.",
+            "prompt_en": "We must study today.",
+            "answer": "müssen",
+            "options": [
+              "müssen",
+              "müsst",
+              "müssen zu",
+              "muss"
+            ],
+            "hint": "Match the verb to the subject 'wir'.",
+            "explanation_en": "The modal verb 'müssen' is conjugated for 'wir', and the infinitive 'lernen' stays at the end.",
+            "explanation_secondary": "The modal verb 'müssen' is conjugated for 'wir', and the infinitive 'lernen' stays at the end."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the sentence into German.",
+            "prompt_de": null,
+            "prompt_en": "I want to go home.",
+            "answer": "Ich will nach Hause gehen.",
+            "options": null,
+            "hint": "Use 'wollen' and put 'gehen' at the end.",
+            "explanation_en": "The conjugated modal 'will' comes second, and the infinitive 'gehen' is placed at the end of the sentence.",
+            "explanation_secondary": "The conjugated modal 'will' comes second, and the infinitive 'gehen' is placed at the end of the sentence."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Find and correct the grammar mistake.",
+            "prompt_de": "Er kann heute kommt.",
+            "prompt_en": "He can come today.",
+            "answer": "Er kann heute kommen.",
+            "options": null,
+            "hint": "Look at the ending of the second verb.",
+            "explanation_en": "The main verb must be in the infinitive form (kommen), not conjugated (kommt), when used with a modal verb.",
+            "explanation_secondary": "The main verb must be in the infinitive form (kommen), not conjugated (kommt), when used with a modal verb."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct conjugated form of 'wollen'.",
+            "prompt_de": "Ihr ___ den Film sehen.",
+            "prompt_en": "You (plural) want to see the movie.",
+            "answer": "wollt",
+            "options": null,
+            "hint": "Check the conjugation for 'ihr'.",
+            "explanation_en": "The modal verb 'wollen' conjugated for 'ihr' is 'wollt', with the infinitive 'sehen' at the end.",
+            "explanation_secondary": "The modal verb 'wollen' conjugated for 'ihr' is 'wollt', with the infinitive 'sehen' at the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct verb form to complete the sentence.",
+            "prompt_de": "Meine Schwester ___ nicht aufräumen.",
+            "prompt_en": "My sister does not want to clean up.",
+            "answer": "will",
+            "options": [
+              "will",
+              "wollen",
+              "wollt",
+              "wollst"
+            ],
+            "hint": "The subject is 'Meine Schwester' (she).",
+            "explanation_en": "For the third person singular (sie), the modal 'wollen' becomes 'will'.",
+            "explanation_secondary": "For the third person singular (sie), the modal 'wollen' becomes 'will'."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate the sentence into German.",
+            "prompt_de": null,
+            "prompt_en": "Can you (singular, informal) help me?",
+            "answer": "Kannst du mir helfen?",
+            "options": null,
+            "hint": "In questions, the conjugated modal verb comes first.",
+            "explanation_en": "The conjugated modal 'kannst' starts the question, and the infinitive 'helfen' goes to the end.",
+            "explanation_secondary": "The conjugated modal 'kannst' starts the question, and the infinitive 'helfen' goes to the end."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Find and correct the grammar mistake.",
+            "prompt_de": "Wir müssen das Auto kaufen wir.",
+            "prompt_en": "We must buy the car.",
+            "answer": "Wir müssen das Auto kaufen.",
+            "options": null,
+            "hint": "Check if there is an unnecessary word at the end.",
+            "explanation_en": "The sentence structure is Subject + Modal + Object + Infinitive. The extra 'wir' at the end is incorrect.",
+            "explanation_secondary": "The sentence structure is Subject + Modal + Object + Infinitive. The extra 'wir' at the end is incorrect."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the correct conjugated form of 'müssen'.",
+            "prompt_de": "Die Kinder ___ ihre Hausaufgaben machen.",
+            "prompt_en": "The children must do their homework.",
+            "answer": "müssen",
+            "options": null,
+            "hint": "The subject 'Die Kinder' is plural.",
+            "explanation_en": "For plural subjects, the modal verb 'müssen' remains 'müssen', and 'machen' stays at the end.",
+            "explanation_secondary": "For plural subjects, the modal verb 'müssen' remains 'müssen', and 'machen' stays at the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct sentence structure.",
+            "prompt_de": "___ heute Abend ins Kino gehen?",
+            "prompt_en": "Do you (plural) want to go to the cinema tonight?",
+            "answer": "Wollt ihr",
+            "options": [
+              "Wollt ihr",
+              "Ihr wollt",
+              "Wollen ihr",
+              "Wollt Sie"
+            ],
+            "hint": "This is a question for 'ihr'.",
+            "explanation_en": "In a yes/no question, the conjugated modal verb (wollt) comes first, followed by the subject (ihr), and the infinitive (gehen) at the end.",
+            "explanation_secondary": "In a yes/no question, the conjugated modal verb (wollt) comes first, followed by the subject (ihr), and the infinitive (gehen) at the end."
+          }
+        ],
+        "latency_s": 29.95
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": [
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct modal verb.",
+            "prompt_de": "Ich ___ heute ins Kino gehen.",
+            "prompt_en": null,
+            "answer": "will",
+            "options": null,
+            "hint": "Think about expressing a plan or desire.",
+            "explanation_en": "The modal verb 'wollen' expresses desire or plans. It is conjugated (ich will), and the main verb 'gehen' stays as infinitive at the end.",
+            "explanation_secondary": "The modal verb 'wollen' is conjugated, and the infinitive verb goes at the end."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct modal verb.",
+            "prompt_de": "Sie ___ nicht helfen.",
+            "prompt_en": null,
+            "answer": "kann",
+            "options": null,
+            "hint": "We need a modal verb for ability or permission.",
+            "explanation_en": "The modal 'können' means 'can'. It is conjugated to 'kann' for 'sie', and the infinitive 'helfen' goes at the end.",
+            "explanation_secondary": "The modal verb 'können' is conjugated correctly, and the infinitive verb goes at the end."
+          },
+          {
+            "type": "fill_blank",
+            "instruction": "Fill in the blank with the correct modal verb.",
+            "prompt_de": "Wir ___ morgen nicht kommen.",
+            "prompt_en": null,
+            "answer": "dürfen",
+            "options": null,
+            "hint": "Think about asking for or having permission.",
+            "explanation_en": "The modal verb 'dürfen' shows permission. It is conjugated as 'dürfen' for 'wir', and 'kommen' stays at the end as infinitive.",
+            "explanation_secondary": "The modal 'dürfen' is conjugated, and the infinitive verb is placed at the end of the clause."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct sentence.",
+            "prompt_de": null,
+            "prompt_en": "Which sentence correctly uses a modal verb and follows the modal pattern?",
+            "answer": "Du musst deine Hausaufgaben heute machen.",
+            "options": [
+              "Du musst deine Hausaufgaben heute machst.",
+              "Du musst deine Hausaufgaben heute mach.",
+              "Du müsst deine Hausaufgaben heute machen.",
+              "Du musst deine Hausaufgaben heute machen."
+            ],
+            "hint": "Check if the modal is conjugated and if the main verb is infinitive at the end.",
+            "explanation_en": "The modal 'müssen' is conjugated as 'musst', and the main verb 'machen' is correct in infinitive form at the end.",
+            "explanation_secondary": "Only the modal verb is conjugated, and the main verb in infinitive form stays at the end of the sentence."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the correct sentence.",
+            "prompt_de": null,
+            "prompt_en": "Which sentence uses a modal and a verb correctly?",
+            "answer": "Ich kann schwimmen.",
+            "options": [
+              "Ich kann zum Schwimmen.",
+              "Ich kann schwimmen.",
+              "Ich kann nicht schwimmen.",
+              "Ich могу schwimmen."
+            ],
+            "hint": "Look for the conjugated modal and correct infinitive verb notation.",
+            "explanation_en": "The conjugated modal 'kann' is followed by the infinitive 'schwimmen'. The structure is correct per modal verb rule.",
+            "explanation_secondary": "Modal verbs are conjugated, and the infinitive main verb appears at the end."
+          },
+          {
+            "type": "multiple_choice",
+            "instruction": "Choose the sentence with the correct modal verb structure.",
+            "prompt_de": null,
+            "prompt_en": "Indicate the sentence that follows the German word order for modal verbs.",
+            "answer": "Er muss heute in die Schule.",
+            "options": [
+              "Er muss heute in die Schule gehen.",
+              "Er muss in die Schule heute gehen.",
+              "Er muss heute gehen in die Schule.",
+              "Er muss gehen in die Schule heute."
+            ],
+            "hint": "The infinitive verb must be at the end; other words like time expressions can vary.",
+            "explanation_en": "Only one sentence follows the modal verb rule: modal 'muss' is conjugated, and 'gehen' stays at the end in infinitive form.",
+            "explanation_secondary": "The infinitive verb must go at the end of the sentence after the conjugated modal verb."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate to German.",
+            "prompt_de": null,
+            "prompt_en": "We are not allowed to leave the classroom.",
+            "answer": "Wir dürfen das Klassenzimmer nicht verlassen.",
+            "options": null,
+            "hint": "Use 'dürfen' for 'allowed to'.",
+            "explanation_en": "The modal 'dürfen' is used for permission or prohibition. 'verlassen' is in infinitive form at the end.",
+            "explanation_secondary": "The modal 'dürfen' is conjugated into 'dürfen', and the infinitive verb 'verlassen' appears at the end of the clause."
+          },
+          {
+            "type": "translate",
+            "instruction": "Translate to German.",
+            "prompt_de": null,
+            "prompt_en": "My friends want to go to Berlin.",
+            "answer": "Meine Freunde wollen nach Berlin fahren.",
+            "options": null,
+            "hint": "Use 'wollen' for 'want to'.",
+            "explanation_en": "The modal 'wollen' is conjugated as 'wollen' for plural subjects. The verb 'fahren' stays at the end as infinitive.",
+            "explanation_secondary": "Modal verb is conjugated, and the main verb goes as infinitive at the end."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "There is an error in the sentence. Find and correct it.",
+            "prompt_de": "Du kannst Deutsch lesen und schreiben.",
+            "prompt_en": null,
+            "answer": "Du kannst Deutsch lesen und schreiben.",
+            "options": null,
+            "hint": "Check if the infinitive verb is correctly placed at the end.",
+            "explanation_en": "This sentence has no modal verb error. The infinitives 'lesen' and 'schreiben' are correctly at the end after the modal 'kann'.",
+            "explanation_secondary": "The modal verb is correctly conjugated, and the infinitive verbs are in the right place."
+          },
+          {
+            "type": "correct_error",
+            "instruction": "Correct the sentence. There is one mistake with the modal verb.",
+            "prompt_de": "Wir muss unser Buch morgen abgeben.",
+            "prompt_en": null,
+            "answer": "Wir müssen unser Buch morgen abgeben.",
+            "options": null,
+            "hint": "Is the modal verb conjugated correctly for 'wir'?",
+            "explanation_en": "The modal verb 'müssen' must be conjugated correctly. For 'wir', it's 'müssen', not 'muss'. 'abgeben' is properly at the end as infinitive.",
+            "explanation_secondary": "The conjugated modal verb must match the subject. 'Wir' takes 'müssen', not 'muss'."
+          }
+        ],
+        "latency_s": 13.21
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A offers tighter pedagogical alignment by explicitly targeting the common A2 misconception of using 'zu' with modal verbs, ensuring all exercises directly reinforce the requested structure."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 5,
+            "pedagogical_quality": 5,
+            "completeness": 8
+          },
+          "preferred": "A",
+          "rationale": "Response A provides accurate, well-structured exercises that strictly adhere to the requested grammar rule and CEFR level, while Response B contains factual errors, contradictory answer keys, and pedagogically flawed items like a 'correct the error' task with no actual error."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 5,
+            "pedagogical_quality": 6,
+            "completeness": 7
+          },
+          "preferred": "A",
+          "rationale": "Response A strictly adheres to the requested modal verbs and format, provides consistent English prompts ideal for A2 learners, and contains perfectly aligned answer keys, whereas Response B suffers from mismatched options, unrequested vocabulary, and poorly designed error-correction tasks."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "gramexp_1",
+    "section": "grammar_explanation",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "rule_name": "Nebensatz mit 'weil' (Subordinate Clause with 'weil')",
+          "cefr_level": "A2",
+          "pattern": "weil + Subject + ... + Conjugated Verb (at the end)",
+          "english_explanation": "The conjunction 'weil' (because) introduces a subordinate clause. In German, the conjugated verb must move to the very end of the sentence, not after the subject.",
+          "persian_explanation": "حرف ربط 'weil' (چون/زیرا) یک جمله وابسته را آغاز می‌کند. در آلمانی، فعل صرف‌شده باید به انتهای جمله منتقل شود، نه بلافاصله بعد از فاعل.",
+          "example_de": "Ich lerne Deutsch, weil ich in Berlin arbeiten will.",
+          "example_en": "I am learning German because I want to work in Berlin.",
+          "example_fa": "من آلمانی یاد می‌گیرم چون می‌خواهم در برلین کار کنم.",
+          "tip": "Think of 'weil' as a magnet that pulls the verb to the end of the sentence."
+        },
+        "latency_s": 3.38
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "rule_name": "Nebensätze mit 'weil' (Subordinating Conjunctions)",
+          "cefr_level": "A2",
+          "pattern": "weil + subject + ... + verb at the end",
+          "english_explanation": "The conjunction 'weil' (because) introduces a subordinate clause. In these clauses, the conjugated verb must move from the second position to the very end of the sentence.",
+          "persian_explanation": "حرف ربط 'weil' (به دلیل اینکه/چون) یک جمله پیرو ایجاد می‌کند. در این نوع جملات، فعل صرف شده باید از جایگاه دوم به انتهای جمله منتقل شود.",
+          "example_de": "Ich bleibe zu Hause, weil ich krank bin.",
+          "example_en": "I am staying at home because I am sick.",
+          "example_fa": "من در خانه می‌مانم چون بیمار هستم.",
+          "tip": "Think of 'weil' as a verb-kicker: it kicks the verb to the end of the sentence!"
+        },
+        "latency_s": 5.13
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "rule_name": "Subordinate clause with 'weil'",
+          "cefr_level": "A2",
+          "pattern": "Subordinate clause after 'weil' uses the conjugated verb at the end",
+          "english_explanation": "When using 'weil' to mean 'because', the verb in the subordinate clause comes at the end of that clause.",
+          "persian_explanation": "هنگامی که از 'weil' به معنای 'چون یا به دلیل اینکه' استفاده می‌کنیم، فعل در سر مرکزی جمله فرعی در انتهای آن قرار می‌گیرد.",
+          "example_de": "Wir bleiben zu Hause, weil wir keins haben.",
+          "example_en": "We're staying home, because we don't have one.",
+          "example_fa": "ما در خانه می‌مانیم، چون یکی نداریم.",
+          "tip": "Remember: 'weil' moves the verb to the end in the clause that follows it."
+        },
+        "latency_s": 2.65
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 8,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A provides a clearer, more precise explanation of the verb-final rule and uses a more intuitive memory aid, avoiding the slightly confusing cross-clause positional phrasing in Response B."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 4,
+            "pedagogical_quality": 5,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A provides a clear, contextually appropriate example and fluent explanations, whereas Response B uses a confusing decontextualized example and awkward Persian phrasing that significantly hinders learning."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 5,
+            "pedagogical_quality": 6,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B provides a grammatically correct and natural example with a clear, level-appropriate explanation, while Response A contains a nonsensical example and awkward phrasing that would confuse an A2 learner."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "gramexp_2",
+    "section": "grammar_explanation",
+    "level": "B1",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "rule_name": "Relative Clauses (Relativsätze)",
+          "cefr_level": "B1",
+          "pattern": "Noun + comma + relative pronoun (der/die/das/dem/den/dessen/deren) + subject + verb at end",
+          "english_explanation": "A relative clause provides extra information about a noun. The relative pronoun (here 'das') matches the gender and number of the noun ('Buch'), but its case (here accusative) is determined by its function inside the clause. The conjugated verb ('habe') moves to the very end of the clause.",
+          "persian_explanation": "جمله‌ی وصفی (Relative Clause) اطلاعات اضافی درباره‌ی یک اسم می‌دهد. ضمایر موصولی (مانند 'das') از نظر جنسیت و شمار با اسم اصلی ('Buch') هماهنگ هستند، اما حالت دستوری آن‌ها (در اینجا مفعولی) بر اساس نقششان درون خود جمله‌ی وصفی تعیین می‌شود. فعل صرف‌شده ('habe') در انتهای جمله‌ی وصفی قرار می‌گیرد.",
+          "example_de": "Das ist der Mann, der mir geholfen hat.",
+          "example_en": "That is the man who helped me.",
+          "example_fa": "آن مردی است که به من کمک کرد.",
+          "tip": "In German relative clauses, always push the conjugated verb to the very end of the clause."
+        },
+        "latency_s": 7.17
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "rule_name": "Relativsätze (Relative Clauses)",
+          "cefr_level": "B1",
+          "pattern": "Noun + , + relative pronoun + ... + verb at the end",
+          "english_explanation": "Relative clauses provide additional information about a noun. They are introduced by a relative pronoun (like 'das', 'der', 'die') that agrees with the noun in gender and number, and the conjugated verb must move to the very end of the clause.",
+          "persian_explanation": "جملات موصولی برای دادن اطلاعات بیشتر درباره یک اسم به کار می‌روند. این جملات با یک ضمیر موصولی (مانند das, der, die) شروع می‌شوند که از نظر جنسیت و تعداد با اسم مطابقت دارد و فعل صرف شده حتماً باید به انتهای جمله منتقل شود.",
+          "example_de": "Der Mann, der dort steht, ist mein Lehrer.",
+          "example_en": "The man who is standing there is my teacher.",
+          "example_fa": "مردی که آنجا ایستاده است، معلم من است.",
+          "tip": "Remember: The comma is mandatory, and the verb always 'kicks' to the end!"
+        },
+        "latency_s": 5.9
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "rule_name": "Relative Clause with 'das'",
+          "cefr_level": "B1",
+          "pattern": "Satz + , + 'das' + Subjekt + Verb + Objekt",
+          "english_explanation": "A relative clause starting with 'das' is used to add more information about a noun. In this case, 'das' refers back to the noun 'das Buch'. The verb is placed at the end in the subordinate clause.",
+          "persian_explanation": "جمله وصفی با 'das' برای افزودن اطلاعات بیشتر درباره‌ی یک اسم استفاده می‌شود. در اینجا 'das' به 'das Buch' اشاره دارد. فعل در جمله وصفی به آخر جمله می‌آید.",
+          "example_de": "Das ist der Mann, den ich getroffen habe.",
+          "example_en": "That is the man whom I met.",
+          "example_fa": "این مردی است که من با او آشنا شدم.",
+          "tip": "Think of 'das' as a little detective—it points back to something we've already mentioned!"
+        },
+        "latency_s": 2.29
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A provides a more precise and pedagogically appropriate explanation for B1 learners by explicitly addressing how the relative pronoun's case is determined by its function within the clause, whereas Response B overlooks this crucial grammatical detail."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 5,
+            "pedagogical_quality": 4,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A accurately explains the relative clause structure and case system appropriate for B1 learners, whereas Response B provides a fundamentally incorrect word-order pattern and oversimplifies the grammar rule."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 6,
+            "pedagogical_quality": 5,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A correctly explains the general rule for relative clauses, including pronoun agreement and verb placement, while Response B incorrectly limits the rule to 'das' and provides a contradictory example using 'den'."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "writing_1",
+    "section": "writing_feedback",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "overall_score": 5.5,
+          "level_achieved": "A2",
+          "word_count": 63,
+          "corrected_text": "Hallo Anna,\n\nwie geht es dir? Ich schreibe dir, um dir von meinem Wochenende zu berichten. Am Samstag bin ich mit meiner Schwester einkaufen gegangen. Wir haben viele Sachen gekauft. Am Sonntag war ich zu Hause und habe ferngesehen. Das Wetter war sehr schön, aber ich bin nicht rausgegangen, weil ich müde war.\n\nBis bald,\nLena",
+          "corrections": [
+            {
+              "type": "grammar",
+              "original": "Am Samstag ich bin einkaufen gegangen",
+              "corrected": "Am Samstag bin ich einkaufen gegangen",
+              "explanation": "Violation of the Verb-Second (V2) rule. In a main clause starting with a time expression, the finite verb ('bin') must occupy the second position, pushing the subject ('ich') to the third position."
+            },
+            {
+              "type": "grammar",
+              "original": "mit meine Schwester",
+              "corrected": "mit meiner Schwester",
+              "explanation": "Case error. The preposition 'mit' always requires the Dative case. 'Schwester' is feminine, so the possessive article must be 'meiner' (Dative feminine), not 'meine' (Nominative/Accusative)."
+            },
+            {
+              "type": "grammar",
+              "original": "fernsehen geguckt",
+              "corrected": "ferngesehen",
+              "explanation": "Collocation and participle error. The verb is 'fernsehen' (to watch TV). In Perfekt tense, the separable prefix 'fern-' moves to the front of the participle 'gesehen'. 'Fernsehen geguckt' is a mix of the infinitive and a colloquial synonym; 'fernsehen' itself is the standard verb here."
+            },
+            {
+              "type": "capitalisation",
+              "original": "das wetter",
+              "corrected": "Das Wetter",
+              "explanation": "All nouns in German must be capitalised. Additionally, 'das' starts a new sentence here, so it must be capitalised as 'Das'."
+            },
+            {
+              "type": "grammar",
+              "original": "ich bin nicht raus gegangen",
+              "corrected": "ich bin nicht rausgegangen",
+              "explanation": "Spelling/Word formation. 'Rausgehen' is a separable verb. In Perfekt tense, the prefix 'raus-' and the participle 'gegangen' are written together as one word."
+            },
+            {
+              "type": "punctuation",
+              "original": "weil ich müde war",
+              "corrected": ", weil ich müde war",
+              "explanation": "Missing comma. A comma is mandatory before a subordinate clause introduced by 'weil' (because)."
+            },
+            {
+              "type": "style",
+              "original": "Ich schreibe dir über mein Wochenende",
+              "corrected": "Ich schreibe dir, um dir von meinem Wochenende zu berichten",
+              "explanation": "The original phrase is grammatically acceptable but slightly unnatural (a literal translation of 'writing about'). Using 'um... zu berichten' or 'von... erzählen' is more idiomatic for an email context."
+            },
+            {
+              "type": "style",
+              "original": "Ich habe fernsehen geguckt",
+              "corrected": "habe ferngesehen",
+              "explanation": "Stylistic improvement. Removing the redundant 'Ich' in the second clause creates a better flow (ellipsis of the subject) and using the correct verb form 'fernsehen' instead of mixing it with 'gucken' makes the text more standard."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "Ich schreibe dir über mein Wochenende",
+              "suggestion": "Ich schreibe dir, um dir von meinem Wochenende zu berichten",
+              "reason": "More idiomatic and polite phrasing for the purpose of the email. 'Berichten' sounds more natural than 'schreiben über' in this context."
+            },
+            {
+              "original": "fernsehen geguckt",
+              "suggestion": "ferngesehen",
+              "reason": "Standard German usage. 'Fernsehen' is the specific verb for watching TV; combining it with 'gucken' is redundant and grammatically incorrect in the Perfekt tense."
+            }
+          ],
+          "structure": {
+            "score": 5,
+            "feedback": "The text has a clear greeting, body, and sign-off. However, the sentences are somewhat choppy and lack connecting words to create a smooth narrative flow."
+          },
+          "exam_feedback": "The student successfully communicated the main events of the weekend, which is the primary goal of the task. However, frequent grammatical errors regarding word order (V2 rule), case usage (Dative after 'mit'), and sentence structure (subordinate clauses) significantly impact readability. Noun capitalisation was also inconsistent. With focused practice on these core A2 grammar rules, the score could easily improve.",
+          "general_feedback": "Focus on the Verb-Second rule in main clauses and the verb-at-the-end rule in 'weil' clauses. Remember to capitalise all nouns and use the correct Dative case after 'mit'.",
+          "strengths": [
+            "Successfully addressed the prompt topic",
+            "Correct use of Perfekt tense with 'haben' and 'sein' generally understood",
+            "Appropriate informal register for a friend"
+          ],
+          "improvements": [
+            "Verb placement in main clauses (V2 rule)",
+            "Verb placement in subordinate clauses (weil/dass)",
+            "Dative case after prepositions (mit)",
+            "Capitalisation of all nouns",
+            "Correct formation of separable verb participles"
+          ]
+        },
+        "latency_s": 17.35
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "overall_score": 6.0,
+          "level_achieved": "A2",
+          "word_count": 76,
+          "corrected_text": "Hallo Anna,\n\nwie geht es dir? Ich schreibe dir, um von meinem Wochenende zu erzählen. Am Samstag bin ich mit meiner Schwester einkaufen gegangen. Wir haben viele Sachen gekauft. Am Sonntag war ich zu Hause und habe ferngesehen. Das Wetter war sehr schön, aber ich bin nicht rausgegangen, weil ich müde war.\n\nBis bald,\nLena",
+          "corrections": [
+            {
+              "type": "grammar",
+              "original": "Am Samstag ich bin",
+              "corrected": "Am Samstag bin ich",
+              "explanation": "Verb-Second (V2) rule: The finite verb must be in the second position. Since 'Am Samstag' is the first element, the verb 'bin' must follow immediately."
+            },
+            {
+              "type": "grammar",
+              "original": "mit meine Schwester",
+              "corrected": "mit meiner Schwester",
+              "explanation": "The preposition 'mit' always requires the dative case. 'Schwester' is feminine, so 'meine' becomes 'meiner'."
+            },
+            {
+              "type": "grammar",
+              "original": "fernsehen geguckt",
+              "corrected": "ferngesehen",
+              "explanation": "The verb 'fernsehen' is a separable verb. The past participle is 'ferngesehen'. 'Fernsehen geguckt' is colloquially used but grammatically incorrect in an exam."
+            },
+            {
+              "type": "capitalisation",
+              "original": "das wetter",
+              "corrected": "Das Wetter",
+              "explanation": "All nouns must be capitalized in German, and it is the start of a sentence."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "Ich schreibe dir über mein Wochenende.",
+              "suggestion": "Ich schreibe dir, um von meinem Wochenende zu erzählen.",
+              "reason": "More natural and idiomatic phrasing for an introductory sentence in an email."
+            },
+            {
+              "original": "ich habe fernsehen geguckt",
+              "suggestion": "habe ferngesehen",
+              "reason": "Using the correct verb 'fernsehen' instead of the redundant 'fernsehen gucken' is more precise and grammatically correct."
+            }
+          ],
+          "structure": {
+            "score": 5,
+            "feedback": "The email follows the correct informal format with a greeting, main body, and closing. It is coherent and easy to follow."
+          },
+          "exam_feedback": {
+            "inhalt": 5,
+            "kommunikative_gestaltung": 4,
+            "formale_richtigkeit": 3
+          },
+          "general_feedback": "You have addressed the task well and your message is clear. However, you must be very careful with the Verb-Second rule (V2) when you start a sentence with a time expression (like 'Am Samstag'). Additionally, remember that all nouns must be capitalized without exception.",
+          "strengths": [
+            "Correct use of 'weil' word order (verb at the end)",
+            "Correct use of 'sein' as auxiliary for 'gegangen'",
+            "Good use of basic A2 vocabulary"
+          ],
+          "improvements": [
+            "Strictly apply the V2 rule in main clauses",
+            "Review dative case endings after prepositions like 'mit'",
+            "Consistent capitalization of all nouns"
+          ]
+        },
+        "latency_s": 17.57
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "overall_score": 6.5,
+          "level_achieved": "A2",
+          "word_count": 87,
+          "corrected_text": "Hallo Anna,\n\nwie geht es dir? Ich schreibe dir über mein Wochenende. Am Samstag bin ich mit meiner Schwester einkaufen gegangen. Wir haben viele Sachen gekauft. Am Sonntag war ich zu Hause und habe ferngesehen. Das Wetter war sehr schön, aber ich bin nicht rausgegangen, weil ich müde war.\n\nBis bald,\nLena",
+          "corrections": [
+            {
+              "type": "grammar",
+              "original": "Am Samstag ich bin einkaufen gegangen",
+              "corrected": "Am Samstag bin ich einkaufen gegangen",
+              "explanation": "Violation of the V2 word order rule — the finite verb 'bin' must be in second position in a main clause."
+            },
+            {
+              "type": "case",
+              "original": "mit meine Schwester",
+              "corrected": "mit meiner Schwester",
+              "explanation": "Correct dative case after the preposition 'mit' — 'meine' must become 'meiner' for feminine dative singular."
+            },
+            {
+              "type": "grammar",
+              "original": "ich habe fernsehen geguckt",
+              "corrected": "habe ferngesehen",
+              "explanation": "Verb 'gucken' is separated from 'sehen' under separable verb rule — 'fernsehen' is compound verb and already correct; 'fernsehen' should be used as single word."
+            },
+            {
+              "type": "grammar",
+              "original": "weil ich müde war",
+              "corrected": "weil ich müde war",
+              "explanation": "The word order here is actually correct ('weil + subord clause') but the use of 'gerade' or participle tone is not needed — this is a minor clarification."
+            },
+            {
+              "type": "grammar",
+              "original": "ich bin nicht raus gegangen",
+              "corrected": "ich bin nicht rausgegangen",
+              "explanation": "Compound verb 'rausgehen' is not separated in correct spelling — it is written as a single word."
+            },
+            {
+              "type": "grammar",
+              "original": "das wetter war sehr schön",
+              "corrected": "Das Wetter war sehr schön",
+              "explanation": "All nouns must be capitalized in German — 'wetter' must be 'Wetter'."
+            },
+            {
+              "type": "grammar",
+              "original": "weil ich müde war.",
+              "corrected": "weil ich müde war.",
+              "explanation": "While word order is correct, a subordinate clause introduced by 'weil', 'dass', etc., requires a comma before it. No comma before 'weil' was present."
+            },
+            {
+              "type": "punctuation",
+              "original": "das wetter war sehr schön aber ich bin nicht raus gegangen",
+              "corrected": "Das Wetter war sehr schön, aber ich bin nicht rausgegangen.",
+              "explanation": "Supplemental 'Aber' connects two coordinate clauses — a comma before 'aber' is always required."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "einkaufen gegangen",
+              "suggestion": "einkaufen gegangen",
+              "reason": "Correct and appropriate for A2, but more formally 'in den Laden gehen' could improve clarity — however, 'einkaufen' is already fine for style purposes."
+            },
+            {
+              "original": "fernsehen geguckt",
+              "suggestion": "fernsehen",
+              "reason": "The verb 'fernsehen' is the correct compound verb for watching TV; 'fernsehen gucken' is redundant."
+            }
+          ],
+          "structure": {
+            "score": 7,
+            "feedback": "The text includes an address, salutation, body, and closing. It covers both days of the weekend briefly. Could benefit from paragraphing with a logical separate paragraph for each day."
+          },
+          "exam_feedback": null,
+          "general_feedback": "Your email addresses the main task — describing parts of your weekend. You use relevant content and appropriate vocabulary for A2. Most errors stem from word order, case agreement, and spelling (especially verbs and compound nouns). Make sure to debut finite verbs at position 2 in main clauses and separate verbs in perfect tense. Also, capitalize all nouns and remember commas before subordinate clauses.",
+          "strengths": [
+            "Clear chronological structure",
+            "Uses temporal expressions (Samstag / Sonntag)",
+            "Relevant vocabulary (einkaufen, Fernsehen, Wetter)"
+          ],
+          "improvements": [
+            "Apply V2 verb position in all main clauses",
+            "Check case agreement with prepositions (mit = Dativ)",
+            "Use correct compound verb forms (ferngesehen, rausgehen, nicht rausgegangen)",
+            "Capitalise all nouns (Wetter)",
+            "Use commas before subordinate clauses (weil)"
+          ]
+        },
+        "latency_s": 9.23
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 9
+          },
+          "preferred": "A",
+          "rationale": "Response A provides clearer, more concise grammatical explanations tailored to an A2 learner, whereas Response B is slightly repetitive and uses confusing terminology for separable verb participles."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "response_b": {
+            "accuracy": 6,
+            "pedagogical_quality": 6,
+            "completeness": 7
+          },
+          "preferred": "A",
+          "rationale": "Response A provides precise, pedagogically sound corrections with clear A2-level explanations, whereas Response B contains factual errors (incorrect word count, null exam feedback), duplicate/confusing entries, and unclear linguistic explanations."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 7,
+            "pedagogical_quality": 7,
+            "completeness": 8
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "preferred": "B",
+          "rationale": "Response B provides clearer and more accurate grammatical explanations, avoids awkward phrasing, and includes a targeted Goethe A2 rubric breakdown that directly addresses the exam context specified in the prompt."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "writing_2",
+    "section": "writing_feedback",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "overall_score": 5.5,
+          "level_achieved": "A2",
+          "word_count": 68,
+          "corrected_text": "Meine Stadt heißt München. Es ist eine große Stadt in Deutschland. Ich wohne hier seit drei Jahren. In meiner Stadt gibt es viele Parks und Museen. Ich mag den Englischen Garten am besten, weil ich dort spazieren gehen kann. Im Sommer schwimmen die Menschen im Fluss. Ich finde meine Stadt sehr schön und fühle mich hier zu Hause.",
+          "corrections": [
+            {
+              "type": "grammar",
+              "original": "seit drei Jahre",
+              "corrected": "seit drei Jahren",
+              "explanation": "The preposition 'seit' requires the Dative case. The plural Dative of 'Jahr' adds an '-n' ending (drei Jahren)."
+            },
+            {
+              "type": "grammar",
+              "original": "In meiner Stadt es gibt",
+              "corrected": "In meiner Stadt gibt es",
+              "explanation": "German main clauses follow the Verb-Second (V2) rule. The adverbial phrase 'In meiner Stadt' is position 1, so the verb 'gibt' must be in position 2, pushing the subject 'es' to position 3."
+            },
+            {
+              "type": "grammar",
+              "original": "der englische Garten",
+              "corrected": "den Englischen Garten",
+              "explanation": "The verb 'mögen' takes the Accusative case. 'Garten' is masculine (der), so the article becomes 'den' and the adjective ending changes to '-en' (weak declension)."
+            },
+            {
+              "type": "grammar",
+              "original": "weil dort kann ich spazieren gehen",
+              "corrected": "weil ich dort spazieren gehen kann",
+              "explanation": "In a subordinate clause introduced by 'weil', the conjugated verb ('kann') must move to the very end. Additionally, the subject 'ich' should usually precede the adverb 'dort' for better flow."
+            },
+            {
+              "type": "grammar",
+              "original": "Im Sommer die Menschen schwimmen",
+              "corrected": "Im Sommer schwimmen die Menschen",
+              "explanation": "Violation of the Verb-Second rule. The time phrase 'Im Sommer' is position 1, so the verb 'schwimmen' must be in position 2, not position 3."
+            },
+            {
+              "type": "spelling",
+              "original": "heisst",
+              "corrected": "heißt",
+              "explanation": "After a long vowel sound (ei), the correct spelling in German is 'ß', not 'ss'."
+            },
+            {
+              "type": "capitalisation",
+              "original": "englische Garten",
+              "corrected": "Englischen Garten",
+              "explanation": "Adjectives derived from proper nouns (like 'Englischer Garten') are capitalized in German."
+            },
+            {
+              "type": "punctuation",
+              "original": "weil dort kann ich spazieren gehen",
+              "corrected": ", weil ich dort spazieren gehen kann",
+              "explanation": "A comma is mandatory before every subordinate clause introduced by 'weil'."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "Ich mag am besten der englische Garten",
+              "suggestion": "Ich mag den Englischen Garten am besten",
+              "reason": "While the student's meaning was clear, the word order and case correction make it grammatically standard. 'Am besten' is correctly placed after the object in this construction."
+            },
+            {
+              "original": "In meiner Stadt es gibt",
+              "suggestion": "In meiner Stadt gibt es",
+              "reason": "Correcting the word order is essential here. 'Es gibt' is a fixed expression, but in sentences starting with a location, the verb must come immediately after the location phrase."
+            }
+          ],
+          "structure": {
+            "score": 6,
+            "feedback": "The text follows a logical progression: introduction, location/description, personal preference, and conclusion. However, the sentence structures are repetitive and the flow is interrupted by word order errors."
+          },
+          "exam_feedback": "The student successfully addresses the topic of 'Meine Stadt' and stays within the word limit. The content is relevant and personal. However, the score is significantly lowered by frequent grammatical errors, specifically regarding word order in main clauses (Verb-Second rule) and subordinate clauses (verb at the end). Capitalization of nouns and adjectives derived from proper nouns also needs improvement.",
+          "general_feedback": "Focus on the position of the verb: it must be second in main clauses and last in clauses starting with 'weil', 'dass', etc. Also, remember to capitalize all nouns and adjectives derived from names.",
+          "strengths": [
+            "Clear and relevant content",
+            "Good use of vocabulary (Parks, Museen, spazieren gehen)",
+            "Correct use of 'seit' for duration (mostly)"
+          ],
+          "improvements": [
+            "Verb placement in subordinate clauses (weil...)",
+            "Verb placement in main clauses (In meiner Stadt...)",
+            "Dative case endings after 'seit'",
+            "Capitalization of proper adjectives"
+          ]
+        },
+        "latency_s": 29.69
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "overall_score": 6.0,
+          "level_achieved": "A2",
+          "word_count": 74,
+          "corrected_text": "Meine Stadt heißt München. Es ist eine große Stadt in Deutschland. Ich wohne seit drei Jahren hier. In meiner Stadt gibt es viele Parks und Museen. Am besten mag ich den Englischen Garten, weil ich dort spazieren gehen kann. Im Sommer schwimmen die Menschen im Fluss. Ich finde meine Stadt sehr schön und ich fühle mich hier zu Hause.",
+          "corrections": [
+            {
+              "type": "spelling",
+              "original": "heisst",
+              "corrected": "heißt",
+              "explanation": "The verb 'heißen' uses 'ß' because it follows a long diphthong (ei)."
+            },
+            {
+              "type": "grammar",
+              "original": "seit drei Jahre",
+              "corrected": "seit drei Jahren",
+              "explanation": "The preposition 'seit' always requires the dative case. The plural dative of 'Jahr' is 'Jahren'."
+            },
+            {
+              "type": "grammar",
+              "original": "es gibt",
+              "corrected": "gibt es",
+              "explanation": "The V2 rule: since 'In meiner Stadt' occupies position 1, the verb 'gibt' must come in position 2."
+            },
+            {
+              "type": "grammar",
+              "original": "am besten der englische Garten",
+              "corrected": "am besten den Englischen Garten",
+              "explanation": "The verb 'mögen' requires the accusative case. 'Der Garten' (masculine) becomes 'den Garten'."
+            },
+            {
+              "type": "capitalisation",
+              "original": "englische Garten",
+              "corrected": "Englischen Garten",
+              "explanation": "Proper names of landmarks and parks are capitalized in German."
+            },
+            {
+              "type": "grammar",
+              "original": "weil dort kann ich spazieren gehen",
+              "corrected": "weil ich dort spazieren gehen kann",
+              "explanation": "In a subordinate clause starting with 'weil', the conjugated verb ('kann') must move to the very end."
+            },
+            {
+              "type": "grammar",
+              "original": "Im Sommer die Menschen schwimmen",
+              "corrected": "Im Sommer schwimmen die Menschen",
+              "explanation": "The V2 rule: 'Im Sommer' is position 1, so the verb 'schwimmen' must be in position 2."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "Ich mag am besten",
+              "suggestion": "Am besten mag ich",
+              "reason": "Moving the preference to the front makes the sentence sound more natural and emphasizes the favorite spot."
+            },
+            {
+              "original": "Ich wohne hier seit drei Jahre",
+              "suggestion": "Ich wohne seit drei Jahren hier",
+              "reason": "Placing 'hier' at the end of this specific phrase is slightly more idiomatic in a descriptive context."
+            }
+          ],
+          "structure": {
+            "score": 4,
+            "feedback": "The text is a simple list of sentences. While acceptable at A2, using a few more connectors would improve the flow."
+          },
+          "exam_feedback": {
+            "inhalt": 5,
+            "kommunikative_gestaltung": 3,
+            "formale_richtigkeit": 2
+          },
+          "general_feedback": "You have a good basic vocabulary and your text is easy to understand. However, you are struggling with the most important rule of German syntax: the Verb-Second (V2) position and the verb-final position in subordinate clauses. You also must remember that 'seit' always triggers the dative case.",
+          "strengths": [
+            "Complete adherence to the task",
+            "Good use of A2 vocabulary (e.g., 'fühle mich zu Hause')",
+            "Clear and concise sentences"
+          ],
+          "improvements": [
+            "Practice Verb-Second word order after time/place phrases",
+            "Review 'weil' clause word order (verb at the end)",
+            "Review dative plural endings (-n)"
+          ]
+        },
+        "latency_s": 21.18
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "overall_score": 6.5,
+          "level_achieved": "A2",
+          "word_count": 87,
+          "corrected_text": "Meine Stadt heißt München. Es ist eine große Stadt in Deutschland. Ich wohne hier seit drei Jahren. In meiner Stadt gibt es viele Parks und Museen. Ich mag den Englischen Garten am besten, weil ich dort spazieren gehen kann. Im Sommer schwimmen die Menschen im Fluss. Ich finde meine Stadt sehr schön und fühle mich hier wie zu Hause.",
+          "corrections": [
+            {
+              "type": "grammar",
+              "original": "Meine Stadt heisst",
+              "corrected": "Meine Stadt heißt",
+              "explanation": "At the A2 level, the correct spelling includes the 'ß' when the sound is long after a vowel and the letter 's' is not 'double'. 'heißt' has a 'ß' after long vowels."
+            },
+            {
+              "type": "grammar",
+              "original": "seit drei Jahre",
+              "corrected": "seit drei Jahren",
+              "explanation": "After prepositions like 'seit', nouns must be in the genitive case. 'Jahr' becomes 'Jahren' in genitive plural for time expressions."
+            },
+            {
+              "type": "grammar",
+              "original": "In meiner Stadt es gibt viele Parks",
+              "corrected": "In meiner Stadt gibt es viele Parks",
+              "explanation": "In 'es gibt...' constructions, the German grammar requires the subject (Parks) to trigger inversion, not 'es'. So 'gibt es' is fixed in sentence order: Adverbial + there is/are (gibt es)."
+            },
+            {
+              "type": "grammar",
+              "original": "Ich mag am besten der englische Garten",
+              "corrected": "Ich mag den Englischen Garten am besten",
+              "explanation": "When using 'am besten' as a superlative complement, the word order places the adverb at the end, and the direct object noun (Garten) should be accusative, needing 'den'."
+            },
+            {
+              "type": "grammar",
+              "original": "weil dort kann ich spazieren gehen",
+              "corrected": "weil ich dort spazieren gehen kann",
+              "explanation": "In subordinate clauses introduced by 'weil', the finite verb must go to the end. 'kann' belongs at the end, not near the beginning."
+            },
+            {
+              "type": "grammar",
+              "original": "Im Sommer die Menschen schwimmen",
+              "corrected": "Im Sommer schwimmen die Menschen",
+              "explanation": "In a sentence with a time expression at the beginning, the finite verb must be in the second position (V2 rule). The word order 'Im Sommer schwimmen...' is correct; 'die Menschen Schwimmen' breaks V2."
+            },
+            {
+              "type": "grammar",
+              "original": "wie zu Hause",
+              "corrected": "wie zu Hause",
+              "explanation": "While not incorrect, 'wie zu Hause' is an incomplete comparison; however, the phrase 'mich wie zu Hause fühlen' is not the correct pattern in German. The correct pattern is z. B. 'mich wie zu Hause fühlen'. Though this is very close to the original, the correction ensures fluency."
+            },
+            {
+              "type": "grammar",
+              "original": "ginge",
+              "corrected": "gehen",
+              "explanation": "The infinitive verb 'gehen' in modal constructions such as 'kann gehen' belongs at the end. 'kann spazieren gehen' is a separable construction; the infinitive must be placed at the end of the clause."
+            },
+            {
+              "type": "grammar",
+              "original": "gibt es viele Parks",
+              "corrected": "gibt es viele Parks",
+              "explanation": "After an inversion like 'in meiner Stadt gibt es...', the conjunction must remain flat; no incorrect components here but a required structure."
+            }
+          ],
+          "vocabulary_suggestions": [
+            {
+              "original": "Ich wohne hier seit drei Jahre",
+              "suggestion": "Ich wohne hier seit drei Jahren",
+              "reason": "Genitive plural after 'seit' is required for 'Drei Jahre'. Using 'Jahre' without the genitive is incorrect grammar at A2 and beyond."
+            },
+            {
+              "original": "Ich mag am besten der englische Garten",
+              "suggestion": "Ich mag den Englischen Garten am besten",
+              "reason": "The choice of 'den' (accusative) and capitalization of place names like 'Englischer Garten' are lexical and capitalization rules. The phrasing also improves word order for superlatives."
+            },
+            {
+              "original": "weil dort kann ich spazieren gehen",
+              "suggestion": "weil ich dort spazieren gehen kann",
+              "reason": "The corrected word order reflects the subordinate clause construction with 'weil'. Using the 'möglicherweise'-construction has correct placement of infinitive to the end."
+            },
+            {
+              "original": "Im Sommer die Menschen schwimmen",
+              "suggestion": "Im Sommer schwimmen die Menschen",
+              "reason": "This adjusts the word order to honor the V2 (Verb-second) rule in main clauses. The temporal adverb comes first, hence the finite verb ('schwimmen') must follow next."
+            },
+            {
+              "original": "Ich fühle mich hier zu Hause",
+              "suggestion": "Ich fühle mich hier wie zu Hause",
+              "reason": "'wie zu Hause' is more idiomatic to express a feeling of familiarity or comfort. The original 'zu Hause' is not wrong as a location, but 'wie zu Hause' is a set phrase meaning feeling at home."
+            },
+            {
+              "original": "Meine Stadt heisst",
+              "suggestion": "Meine Stadt heißt",
+              "reason": "The correct spelling is 'heißt' with 'ß'. 'heisst' is a standard spelling mistake which examiners correct strictly, as capitalization and letter use are tested in Goethe A2."
+            }
+          ],
+          "structure": {
+            "score": 6,
+            "feedback": "The text has a simple structure with a beginning, middle, and end. However, no paragraph breaks are used (not expected at A2). Ideas are grouped logically but could benefit from cohesive devices (z. B. 'Außerdem' or 'Besonders')."
+          },
+          "exam_feedback": "For Goethe A2, examiners mark such texts with attention to grammar precision, word order, case usage, spelling and capitalization. The student attempted real sentences with content, but several fundamental rules were not followed: subordinate clauses, V2, genitive after 'seit', and spelling. These all impact grammar and correctness scores. Minor issues like word order in modal verbs, use of 'das/Museum', and overly literal translations are evident.",
+          "general_feedback": "Well-structured sentences with relevant content, but multiple grammar and register issues persist. Focus on subordinate clauses (word order), prepositions + cases, spelling (ß), and capitalisation of all nouns — this is essential across all CEFR levels. Weak recall in superlatives and separable verbs tripped grammar errors hard.",
+          "strengths": [
+            "Uses appropriate vocabulary for A2 description",
+            "Clearly communicates the main topic about her city",
+            "Includes specific details (parks, museums, river, English Garden)",
+            "Attempts to use subordinate clauses and adverbial phrases"
+          ],
+          "improvements": [
+            "Improve subordinate clause word order after conjunctions",
+            "Always check prepositions with correct case (e. g. seit + genitive)",
+            "Correct verb placement in infinitive constructions",
+            "Always capitalise all nouns",
+            "Use 'gibt es' correctly in existential sentences"
+          ]
+        },
+        "latency_s": 14.37
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "response_b": {
+            "accuracy": 7,
+            "pedagogical_quality": 7,
+            "completeness": 8
+          },
+          "preferred": "A",
+          "rationale": "Response A provides more precise grammatical explanations, correctly identifies the missing comma before the subordinate clause, uses a clearer positional framework for A2 learners, and delivers more constructive, exam-aligned feedback."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 4,
+            "pedagogical_quality": 5,
+            "completeness": 6
+          },
+          "preferred": "A",
+          "rationale": "Response A provides grammatically precise corrections and clear, level-appropriate explanations, whereas Response B contains critical factual errors (e.g., claiming 'seit' requires the Genitive case) and hallucinated corrections that would mislead A2 learners."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 3,
+            "pedagogical_quality": 4,
+            "completeness": 8
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "preferred": "B",
+          "rationale": "Response B provides factually correct grammar explanations and avoids the hallucinations and critical case errors (e.g., claiming 'seit' takes genitive instead of dative) found in Response A, making it far more reliable for A2 learners."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "trans_1",
+    "section": "translation",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": "I am going to the cinema with my friends tomorrow.",
+        "latency_s": 0.32
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": "I am going to the cinema with my friends tomorrow.",
+        "latency_s": 0.51
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": "I am going to the cinema with my friends tomorrow.",
+        "latency_s": 0.31
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "tie",
+          "rationale": "Both responses are identical and provide a flawless translation."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "tie",
+          "rationale": "Both responses are character-for-character identical, providing a flawless and natural English translation of the German sentence."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "tie",
+          "rationale": "Both models produced identical, accurate, and natural translations of the input sentence."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "trans_2",
+    "section": "translation",
+    "level": "B1",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": "Although it rained heavily, we went for a walk anyway because we needed the fresh air.",
+        "latency_s": 0.36
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": "Although it rained heavily, we went for a walk anyway because we needed the fresh air.",
+        "latency_s": 0.46
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": "Although it rained heavily, we still went for a walk because we needed fresh air.",
+        "latency_s": 0.41
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "tie",
+          "rationale": "Both responses are character-for-character identical, providing a flawless and natural English translation of the German sentence."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "tie",
+          "rationale": "Both responses provide highly accurate, idiomatic translations that correctly handle the concessive structure and abstract noun phrasing, with only negligible stylistic differences."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 9,
+            "pedagogical_quality": 8,
+            "completeness": 10
+          },
+          "preferred": "A",
+          "rationale": "Response A is slightly superior because it correctly omits the definite article before 'fresh air,' resulting in a more natural and idiomatic English translation for learners."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "chat_1",
+    "section": "grammar_chat",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "Great question! Let's look at this rule in action. We use **sein** (to be) in the Perfekt tense specifically for verbs that show **movement** from one place to another or a **change of state**. For example, we don't say 'haben gegangen' because walking involves moving from point A to point B. Here are two clear examples:\n\n🇩🇪 Ich **bin** nach Berlin **gefahren**. (I drove to Berlin - movement)\n🇩🇪 Das Kind **ist** eingeschlafen. (The child fell asleep - change of state)\n\n💡 Think of **sein** as the verb for 'changing location' or 'becoming something new'. Does that make sense, or would you like to try making your own sentence?",
+          "tutor_response_secondary": "Great question! Let's look at this rule in action. We use **sein** (to be) in the Perfekt tense specifically for verbs that show **movement** from one place to another or a **change of state**. For example, we don't say 'haben gegangen' because walking involves moving from point A to point B. Here are two clear examples:\n\n🇩🇪 Ich **bin** nach Berlin **gefahren**. (I drove to Berlin - movement)\n🇩🇪 Das Kind **ist** eingeschlafen. (The child fell asleep - change of state)\n\n💡 Think of **sein** as the verb for 'changing location' or 'becoming something new'. Does that make sense, or would you like to try making your own sentence?",
+          "exercise": null,
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 4.8
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "Of course! I'd be happy to. In German, while most verbs use **haben** to form the **Perfekt** (past tense), we use **sein** for verbs that describe a movement from point A to point B or a change of state.\n\nHere is a classic example of movement:\n🇩🇪 Ich bin nach Berlin gefahren. (I drove/went to Berlin.)\n\nAnd here is an example of a change of state (e.g., waking up):\n🇩🇪 Er ist aufgewacht. (He woke up.)\n\n💡 Remember: If the verb involves 'getting somewhere' or 'becoming something else,' **sein** is your best friend! Does that make sense, or would you like me to explain the 'change of state' part a bit more?",
+          "tutor_response_secondary": "Of course! I'd be happy to. In German, while most verbs use haben to form the Perfekt (past tense), we use sein for verbs that describe a movement from point A to point B or a change of state.\n\nHere is a classic example of movement:\n🇩🇪 Ich bin nach Berlin gefahren. (I drove/went to Berlin.)\n\nAnd here is an example of a change of state (e.g., waking up):\n🇩🇪 Er ist aufgewacht. (He woke up.)\n\n💡 Remember: If the verb involves 'getting somewhere' or 'becoming something else,' sein is your best friend! Does that make sense, or would you like me to explain the 'change of state' part a bit more?",
+          "exercise": null,
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 7.07
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "Of course! Let me explain. In German, we use **sein** (to be) instead of **haben** (to have) when talking about movement or change of state in the present perfect tense (**Perfekt**). These verbs describe a change in position or condition, not actions like eating or working.\n\n🇩🇪 Example: Ich bin nach Hause gegangen. (I went home.)\nHere, 'gehen' (to go) is a movement verb – I changed my position from somewhere else to home, so we use **sein**.\n\n🇩🇪 Example: Sie ist zwischenzeitlich reingegangen. (She went inside in the meantime.)\n'Vorbeigehen' and 'reingehen' are movement verbs too.\n\n💡 *Tip: Think of 'werden' verbs – verbs that mean 'to become' or 'to go to' often use **sein**.*\n\nFeel free to ask any questions, or let me know if you'd like an exercise to try!",
+          "tutor_response_secondary": "Of course! Let me explain. In German, we use **sein** (to be) instead of **haben** (to have) when talking about movement or change of state in the present perfect tense (**Perfekt**). These verbs describe a change in position or condition, not actions like eating or working.\n\n🇩🇪 Example: Ich bin nach Hause gegangen. (I went home.)\nHere, 'gehen' (to go) is a movement verb – I changed my position from somewhere else to home, so we use **sein**.\n\n🇩🇪 Example: Sie ist zwischenzeitlich reingegangen. (She went inside in the meantime.)\n'Vorbeigehen' and 'reingehen' are movement verbs too.\n\n💡 *Tip: Think of 'werden' verbs – verbs that mean 'to become' or 'to go to' often use **sein**.*\n\nFeel free to ask any questions, or let me know if you'd like an exercise to try!",
+          "exercise": null,
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 3.97
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "gemma-4-31b-it",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B is slightly better pedagogically as it explicitly contrasts the rule with 'haben' and encourages productive practice by asking the learner to create their own sentence."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "qwen3.5-122b-a10b"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 6,
+            "pedagogical_quality": 6,
+            "completeness": 8
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "preferred": "B",
+          "rationale": "Response B provides accurate, well-categorized examples and a clear, A2-appropriate explanation, while Response A contains awkward phrasing and a confusing tip about 'werden' verbs."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 7,
+            "pedagogical_quality": 6,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B provides clearer, standard examples and an accurate heuristic for A2 learners, whereas Response A's confusing 'werden verbs' tip is pedagogically misleading."
+        }
+      }
+    ]
+  },
+  {
+    "task_id": "chat_2",
+    "section": "grammar_chat",
+    "level": "A2",
+    "generations": {
+      "qwen3.5-122b-a10b": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "That is absolutely correct! 🎉 You have perfectly applied the rule for **Perfekt with sein**. \n\nThe verb **fahren** (to drive/travel) indicates **movement** from one place to another. Because of this change of location, we use **sein** as the helper verb instead of *haben*. \n\nHere is another example of this rule in action:\n🇩🇪 \"Ich **bin** nach Hause **gegangen**.\" (I went home.)\n🇩🇪 \"Er **ist** gestern **angekommen**.\" (He arrived yesterday.)\n\n💡 **Tip**: Think of *sein* as the verb for \"going somewhere\" or \"becoming something.\" Since you went to Berlin, *bin* is the right choice!\n\nWould you like to try creating your own sentence with a different movement verb, or do you have any questions about why some verbs use *haben* instead?",
+          "tutor_response_secondary": "That is absolutely correct! You have perfectly applied the rule for Perfekt with sein. The verb fahren (to drive/travel) indicates movement from one place to another. Because of this change of location, we use sein as the helper verb instead of haben. Here is another example of this rule in action: \"Ich bin nach Hause gegangen.\" (I went home.) \"Er ist gestern angekommen.\" (He arrived yesterday.) Tip: Think of sein as the verb for \"going somewhere\" or \"becoming something.\" Since you went to Berlin, bin is the right choice! Would you like to try creating your own sentence with a different movement verb, or do you have any questions about why some verbs use haben instead?",
+          "exercise": null,
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 25.8
+      },
+      "gemma-4-31b-it": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "Yes, that is absolutely correct! Well done. \n\nYou've used the **Perfekt** tense perfectly here. In German, while most verbs use *haben*, we use **sein** (to be) when the verb describes a **movement from point A to point B** or a **change of state**.\n\n🇩🇪 *Ich bin nach Berlin gefahren.* (I traveled/drove to Berlin) — This is movement.\n🇩🇪 *Ich bin aufgewacht.* (I woke up) — This is a change of state (from asleep to awake).\n\n💡 **Tip:** Think of it as a 'transition.' If the subject is moving or transforming, *sein* is your best friend!\n\nDo you have any questions about which verbs fit into this category, or would you like to try a few practice sentences?",
+          "tutor_response_secondary": "Yes, that is absolutely correct! Well done. \n\nYou've used the Perfekt tense perfectly here. In German, while most verbs use haben, we use sein (to be) when the verb describes a movement from point A to point B or a change of state.\n\nIch bin nach Berlin gefahren. (I traveled/drove to Berlin) — This is movement.\nIch bin aufgewacht. (I woke up) — This is a change of state (from asleep to awake).\n\nTip: Think of it as a 'transition.' If the subject is moving or transforming, sein is your best friend!\n\nDo you have any questions about which verbs fit into this category, or would you like to try a few practice sentences?",
+          "exercise": null,
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 8.91
+      },
+      "qwen3-omni-30b-a3b-instruct": {
+        "ok": true,
+        "result": {
+          "tutor_response_de": "Yes, your sentence 'Ich bin nach Berlin gefahren.' is correct! Great job! 🎉 This is an example of the **Perfekt** formed with the auxiliary verb **sein**. We use 'sein' instead of 'haben' with certain verbs that indicate **movement** or **change of state**.\n\n🇩🇪 For example:\n1. 'Sie ist nach Hause gegangen.' (She went home.) — 'gehen' (to go) is a movement verb.\n2. 'Wir sind gestern in Berlin angekommen.' (We arrived in Berlin yesterday.) — 'ankommen' (to arrive) is also a movement verb.\n\n💡 ** Tip **: If you can imagine moving to another place (like 'go', 'come', 'arrive', 'leave', 'get', 'come back', etc.) — choose **sein** for the **Perfekt** tense.\n\nIs there a specific verb you'd like to check with 'sein'? Or would you like a **short exercise** to practice this further? 😊",
+          "tutor_response_secondary": "Yes, your sentence 'Ich bin nach Berlin gefahren.' is correct! Great job! 🎉 This is an example of the **Perfekt** formed with the auxiliary verb **sein**. We use 'sein' instead of 'haben' with certain verbs that indicate **movement** or **change of state**.\n\n🇩🇪 For example:\n1. 'Sie ist nach Hause gegangen.' (She went home.) — 'gehen' (to go) is a movement verb.\n2. 'Wir sind gestern in Berlin angekommen.' (We arrived in Berlin yesterday.) — 'ankommen' (to arrive) is also a movement verb.\n\n💡 ** Tip **: If you can imagine moving to another place (like 'go', 'come', 'arrive', 'leave', 'get', 'come back', etc.) — choose **sein** for the **Perfekt** tense.\n\nIs there a specific verb you'd like to check with 'sein'? Or would you like a **short exercise** to practice this further? 😊",
+          "exercise": "Complete the sentence:\n'Ich ____ gestern nach Hause ____.'",
+          "correction": null,
+          "what_was_wrong": null,
+          "explanation_secondary": null
+        },
+        "latency_s": 4.2
+      }
+    },
+    "pairwise_judging": [
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "gemma-4-31b-it"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "B more effectively addresses both parts of the stated rule (movement and change of state) with clear, level-appropriate examples and a sharper conceptual tip for A2 learners."
+        }
+      },
+      {
+        "pair": [
+          "qwen3.5-122b-a10b",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3.5-122b-a10b",
+          "B": "qwen3-omni-30b-a3b-instruct"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 10,
+            "completeness": 10
+          },
+          "preferred": "B",
+          "rationale": "Response B includes a targeted practice exercise that directly reinforces the grammar rule, making it more effective for active learning at the A2 level."
+        }
+      },
+      {
+        "pair": [
+          "gemma-4-31b-it",
+          "qwen3-omni-30b-a3b-instruct"
+        ],
+        "mapping": {
+          "A": "qwen3-omni-30b-a3b-instruct",
+          "B": "gemma-4-31b-it"
+        },
+        "judge_result": {
+          "response_a": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 10
+          },
+          "response_b": {
+            "accuracy": 10,
+            "pedagogical_quality": 9,
+            "completeness": 9
+          },
+          "preferred": "A",
+          "rationale": "A includes a targeted practice exercise that aligns well with interactive app pedagogy, making it slightly more effective for reinforcing the rule at the A2 level."
+        }
+      }
+    ]
+  }
+]

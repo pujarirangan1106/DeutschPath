@@ -43,10 +43,10 @@ app.include_router(annotations.router)
 @app.on_event("startup")
 def startup():
     init_db()
-    key = os.getenv("GEMINI_API_KEY", "")
+    key = os.getenv("GEMINI_API_KEY", "").strip() or os.getenv("API_KEY", "").strip()
     if not key or key == "your-gemini-api-key-here":
-        print("\nWARNING: GEMINI_API_KEY is missing in backend/.env")
-        print("   Get a free key at https://aistudio.google.com/apikey\n")
+        print("\nWARNING: No API key set in backend/.env")
+        print("   Set GEMINI_API_KEY for Gemini, or API_KEY + API_BASE_URL for any OpenAI-compatible provider.\n")
 
 
 @app.post("/shutdown")

@@ -1,0 +1,161 @@
+[
+  {
+    "key": "short_greeting",
+    "text": "Guten Morgen!",
+    "gemini": {
+      "ok": false,
+      "error": "'NoneType' object has no attribute 'parts'",
+      "latency_s": 4.87
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.15,
+      "bytes": 8640,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/short_greeting_gtts.mp3"
+    }
+  },
+  {
+    "key": "question",
+    "text": "Wie geht es dir heute?",
+    "gemini": {
+      "ok": true,
+      "latency_s": 2.13,
+      "bytes": 81210,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/question_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.25,
+      "bytes": 14016,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/question_gtts.mp3"
+    }
+  },
+  {
+    "key": "umlauts_ß",
+    "text": "Der Schüler lernt fleißig für die Prüfung.",
+    "gemini": {
+      "ok": true,
+      "latency_s": 3.0,
+      "bytes": 144570,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/umlauts_ß_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.31,
+      "bytes": 24000,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/umlauts_ß_gtts.mp3"
+    }
+  },
+  {
+    "key": "subordinate_clause",
+    "text": "Obwohl es stark geregnet hat, sind wir trotzdem spazieren gegangen.",
+    "gemini": {
+      "ok": true,
+      "latency_s": 3.62,
+      "bytes": 200250,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/subordinate_clause_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.3,
+      "bytes": 39360,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/subordinate_clause_gtts.mp3"
+    }
+  },
+  {
+    "key": "numbers",
+    "text": "Ich habe drei Katzen und zwei Hunde.",
+    "gemini": {
+      "ok": true,
+      "latency_s": 2.59,
+      "bytes": 138810,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/numbers_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.47,
+      "bytes": 22656,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/numbers_gtts.mp3"
+    }
+  },
+  {
+    "key": "exclamation",
+    "text": "Das ist ja unglaublich!",
+    "gemini": {
+      "ok": true,
+      "latency_s": 1.83,
+      "bytes": 86970,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/exclamation_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.31,
+      "bytes": 14400,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/exclamation_gtts.mp3"
+    }
+  },
+  {
+    "key": "formal_polite",
+    "text": "Könnten Sie mir bitte helfen?",
+    "gemini": {
+      "ok": true,
+      "latency_s": 2.0,
+      "bytes": 81210,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/formal_polite_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.46,
+      "bytes": 16704,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/formal_polite_gtts.mp3"
+    }
+  },
+  {
+    "key": "grammar_example",
+    "text": "Ich habe das Buch gestern gekauft.",
+    "gemini": {
+      "ok": true,
+      "latency_s": 2.14,
+      "bytes": 92730,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/grammar_example_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.25,
+      "bytes": 21696,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/grammar_example_gtts.mp3"
+    }
+  },
+  {
+    "key": "scenario_dialogue",
+    "text": "Möchten Sie Ihren Kaffee schwarz oder mit Milch und Zucker?",
+    "gemini": {
+      "ok": true,
+      "latency_s": 3.12,
+      "bytes": 163770,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/scenario_dialogue_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.26,
+      "bytes": 32256,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/scenario_dialogue_gtts.mp3"
+    }
+  },
+  {
+    "key": "idiomatic",
+    "text": "Das kostet ihn den Kopf, wenn er nicht aufpasst.",
+    "gemini": {
+      "ok": true,
+      "latency_s": 3.96,
+      "bytes": 158010,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/idiomatic_gemini.wav"
+    },
+    "gtts": {
+      "ok": true,
+      "latency_s": 0.51,
+      "bytes": 28992,
+      "path": "/tmp/claude-1000/-home-rangan-ubuntu-Deutsch-DeutschPath/a76b82c9-1485-4390-92e7-0788ff707c09/scratchpad/tts_audio/idiomatic_gtts.mp3"
+    }
+  }
+]

@@ -16,8 +16,8 @@ async def speak(req: TTSRequest):
     if not text:
         raise HTTPException(400, "No text provided")
     try:
-        from services.ai_service import gemini_tts
-        audio = await gemini_tts(text)
-        return Response(content=audio, media_type="audio/wav")
+        from services.ai_service import generate_tts
+        audio, mime_type = await generate_tts(text)
+        return Response(content=audio, media_type=mime_type)
     except Exception as e:
         raise HTTPException(500, f"TTS failed: {e}")

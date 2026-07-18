@@ -173,22 +173,55 @@ export async function batchAnalyzeWords(
 
 // ── Settings ───────────────────────────────────────────────────────────────
 export const getSettings = () =>
-  request<{ gemini_key_set: boolean; gemini_key_masked: string }>("/settings");
+  request<{
+    gemini_key_set: boolean;
+    gemini_key_masked: string;
+    api_key_set: boolean;
+    api_key_masked: string;
+    api_base_url: string;
+    model: string;
+    tts_model: string;
+    tts_voice: string;
+    provider: string;
+  }>("/settings");
 
-export const saveSettings = (data: { gemini_api_key?: string }) =>
+export const saveSettings = (data: {
+  gemini_api_key?: string;
+  api_key?: string;
+  api_base_url?: string;
+  model?: string;
+  tts_model?: string;
+  tts_voice?: string;
+  provider?: string;
+}) =>
   request<{ ok: boolean }>("/settings", {
     method: "POST",
     body: JSON.stringify(data),
   });
 
-export const deleteApiKey = () =>
+export const deleteGeminiKey = () =>
   request<{ ok: boolean }>("/settings/gemini-key", { method: "DELETE" });
 
-export const testApiConnection = (apiKey?: string) =>
+export const deleteApiKey = () =>
+  request<{ ok: boolean }>("/settings/api-key", { method: "DELETE" });
+
+export const testApiConnection = (opts: {
+  api_key?: string;
+  gemini_api_key?: string;
+  api_base_url?: string;
+  provider?: string;
+}) =>
   request<{ ok: boolean }>("/settings/test-connection", {
     method: "POST",
-    body: JSON.stringify({ api_key: apiKey ?? null }),
+    body: JSON.stringify(opts),
   });
+
+export const getAllModels = () =>
+  request<{
+    gemini: { available: boolean; model: string };
+    openai_models: { id: string; name: string; vision: boolean }[];
+    openai_error: string | null;
+  }>("/settings/models");
 
 export const getUsage = () =>
   request<{
