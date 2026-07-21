@@ -378,7 +378,8 @@
       "removeKey": "Anahtar kaldırılamadı",
       "restore": "Geri yükleme başarısız oldu",
       "reset": "Sıfırlama başarısız oldu. Lütfen tekrar deneyin.",
-      "delete": "Silme başarısız oldu. Lütfen tekrar deneyin."
+      "delete": "Silme başarısız oldu. Lütfen tekrar deneyin.",
+      "authFailed": "Kimlik doğrulama başarısız — API anahtarınızın doğru ve kaydedilmiş olduğunu kontrol edin."
     },
     "uiLang": {
       "heading": "Uygulama Dili",
@@ -456,7 +457,9 @@
       "ttsNoFreeTier": "— ücretsiz katman yok, her zaman ücretli",
       "ttsCalls": "TTS Çağrıları",
       "costNote": "Mevcut ücretli katman oranlarında yaklaşık maksimum: <b>~${total}</b> (metin ~${text} + ses ~${tts}). Metin kullanımı muhtemelen ücretsizdir. Sesin ücretsiz katmanı yoktur — gerekmediğinde otomatik oynatmayı kapalı tutun.",
-      "checkRealUsage": "AI Studio'da gerçek kullanımı kontrol et →"
+      "checkRealUsage": "AI Studio'da gerçek kullanımı kontrol et →",
+      "costLineBase": "Mevcut ücretli katman fiyatlarına göre yaklaşık üst sınır: <b>~${total}</b> (metin ~${text} + ses ~${tts}).",
+      "costNoteOpenai": "Maliyet sağlayıcınıza bağlıdır — doğru rakamlar için onların panosunu kontrol edin."
     },
     "backup": {
       "heading": "Veri Yedekleme",
@@ -483,6 +486,28 @@
       "deleteVocabBtn": "Kelime bilgisini sil",
       "confirmDelete": "Silmeyi onayla",
       "deleted": "Silindi!"
+    },
+    "provider": {
+      "heading": "Yapay Zekâ Sağlayıcısı",
+      "desc": "Kelime analizi, dil bilgisi, senaryolar ve sesi hangi yapay zekâ arka ucunun çalıştıracağını seçin.",
+      "activeModel": "Etkin Model",
+      "refresh": "Yenile",
+      "searchModels": "Model ara…",
+      "noModelsMatch": "\"{query}\" ile eşleşen model yok",
+      "vision": "görüntü",
+      "noKeySetShort": "anahtar yok",
+      "visionHint": "📷 Görüntü destekli modeller Kitap Okuyucu'yu (OCR) destekler. Daha fazla seçenek için aşağıya API anahtarları ekleyin.",
+      "geminiGetKey": "Şuradan ücretsiz anahtar alın:",
+      "geminiGetKeyLink": "aistudio.google.com →",
+      "openaiApiTitle": "OpenAI uyumlu API",
+      "openaiDesc": "OpenAI, Groq, GWDG SAIA, Ollama, LM Studio veya herhangi bir OpenAI uyumlu uç nokta ile çalışır.",
+      "apiKeyLabel": "API Anahtarı",
+      "openaiPlaceholderNew": "sk-… veya sağlayıcı anahtarınız",
+      "baseUrl": "Temel URL",
+      "baseUrlExamples": "Örnekler:",
+      "modelPickedNote": "Anahtar kaydedildikten sonra model, yukarıdaki <b>Etkin Model</b> seçicisinden seçilir.",
+      "noKeySetAdd": "Anahtar yok — aşağıdan bir tane ekleyin.",
+      "couldNotLoadModels": "Modeller yüklenemedi"
     }
   },
   "cases": {

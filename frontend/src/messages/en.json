@@ -378,7 +378,8 @@
       "removeKey": "Failed to remove key",
       "restore": "Restore failed",
       "reset": "Failed to reset. Please try again.",
-      "delete": "Failed to delete. Please try again."
+      "delete": "Failed to delete. Please try again.",
+      "authFailed": "Authentication failed — check your API key is correct and saved."
     },
     "uiLang": {
       "heading": "App Language",
@@ -456,7 +457,9 @@
       "ttsNoFreeTier": "— no free tier, always paid",
       "ttsCalls": "TTS Calls",
       "costNote": "Rough maximum at current paid-tier rates: <b>~${total}</b> (text ~${text} + voice ~${tts}). Text usage is likely free. Voice has no free tier — keep auto-play off when not needed.",
-      "checkRealUsage": "Check real usage in AI Studio →"
+      "checkRealUsage": "Check real usage in AI Studio →",
+      "costLineBase": "Rough maximum at current paid-tier rates: <b>~${total}</b> (text ~${text} + voice ~${tts}).",
+      "costNoteOpenai": "Pricing depends on your provider — check their dashboard for accurate figures."
     },
     "backup": {
       "heading": "Data Backup",
@@ -483,6 +486,28 @@
       "deleteVocabBtn": "Delete vocabulary",
       "confirmDelete": "Confirm delete",
       "deleted": "Deleted!"
+    },
+    "provider": {
+      "heading": "AI Provider",
+      "desc": "Choose which AI backend powers word analysis, grammar, scenarios, and voice.",
+      "activeModel": "Active Model",
+      "refresh": "Refresh",
+      "searchModels": "Search models…",
+      "noModelsMatch": "No models match \"{query}\"",
+      "vision": "vision",
+      "noKeySetShort": "no key set",
+      "visionHint": "📷 vision-capable models support the Book Reader (OCR). Add API keys below to unlock more options.",
+      "geminiGetKey": "Get a free key at",
+      "geminiGetKeyLink": "aistudio.google.com →",
+      "openaiApiTitle": "OpenAI-compatible API",
+      "openaiDesc": "Works with OpenAI, Groq, GWDG SAIA, Ollama, LM Studio, or any OpenAI-compatible endpoint.",
+      "apiKeyLabel": "API Key",
+      "openaiPlaceholderNew": "sk-… or your provider key",
+      "baseUrl": "Base URL",
+      "baseUrlExamples": "Examples:",
+      "modelPickedNote": "Model is picked in the <b>Active Model</b> selector above once a key is saved.",
+      "noKeySetAdd": "No key set — add one below.",
+      "couldNotLoadModels": "Could not load models"
     }
   },
   "cases": {

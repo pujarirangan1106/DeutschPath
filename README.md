@@ -180,16 +180,68 @@ The launcher:
 
 ---
 
-## 🔑 Getting Your Gemini API Key
+## 🔑 AI Provider & API Keys
 
-DeutschPath uses Google's Gemini API. The free tier covers regular personal use. 
+DeutschPath supports two AI backends — **Gemini (default)** and any **OpenAI-compatible API**. You switch between them in **Settings → AI Provider**, or by setting `PROVIDER` in `backend/.env`.
+
+### Provider selection logic
+
+| Scenario | Active provider |
+|---|---|
+| `PROVIDER=gemini` in `.env` | Gemini |
+| `PROVIDER=openai` in `.env` | OpenAI-compatible |
+| Only `GEMINI_API_KEY` set (no `PROVIDER`) | Gemini (auto-detected) |
+| Only `API_KEY` set (no `PROVIDER`) | OpenAI-compatible (auto-detected) |
+| Both keys set, no `PROVIDER` | Gemini (takes priority) |
+| Both keys set, `PROVIDER=openai` | OpenAI-compatible |
+
+Switching in the Settings UI writes `PROVIDER` to `backend/.env` and takes effect immediately — no restart needed.
+
+---
+
+### Gemini (Google) — default
+
+DeutschPath was built around Gemini and it covers everything: text, vision/OCR, neural TTS, and audio transcription.
 
 1. Go to **[aistudio.google.com](https://aistudio.google.com)** — sign in with any Google account
 2. Click **Get API key → Create API key**
-3. Copy the key (it starts with `AQ.` in current AI Studio versions)
-4. Open DeutschPath → **Settings** → paste and save
+3. Copy the key (starts with `AQ.` in current AI Studio versions — older `AIza…` keys are being deprecated)
+4. Open DeutschPath → **Settings → AI Provider → Gemini** → paste and save
 
-> **Free tier limits (as of June 2026):** 10 requests/min · 250,000 tokens/min · 250 requests/day for Gemini 2.5 Flash text. The TTS model (`gemini-2.5-flash-preview-tts`) has **no free tier** — voice features (auto-play in scenarios and the reader) are billed at paid rates. Keep auto-play off if you want to stay on the free tier.
+> **Free tier limits (as of June 2026):** 10 requests/min · 250,000 tokens/min · 250 requests/day for Gemini 2.5 Flash text. The TTS model (`gemini-2.5-flash-preview-tts`) has **no free tier** — voice features are billed at paid rates. Keep auto-play off to stay on the free tier.
+
+---
+
+### OpenAI-compatible (alternative)
+
+Works with OpenAI, Groq, GWDG SAIA, Ollama, LM Studio, or any provider that implements `/v1/chat/completions`.
+
+Open DeutschPath → **Settings → AI Provider → OpenAI-compatible**, then fill in:
+
+| Field | What to enter |
+|---|---|
+| **API Key** | Your provider's key (`sk-…`, bearer token, etc.) |
+| **Base URL** | Provider endpoint (see examples below) |
+| **Model** | Model name available on that provider |
+
+**Provider examples:**
+
+| Provider | Base URL | Example model |
+|---|---|---|
+| OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` |
+| Groq | `https://api.groq.com/openai/v1` | `llama-3.3-70b-versatile` |
+| GWDG SAIA | `https://chat-ai.academiccloud.de/v1` | `meta-llama-3.1-8b-instruct` |
+| Ollama (local) | `http://localhost:11434/v1` | `llama3.2` |
+| LM Studio | `http://localhost:1234/v1` | *(loaded model name)* |
+
+**Feature availability on OpenAI-compatible providers:**
+
+| Feature | Requirement |
+|---|---|
+| Word analysis, grammar, chat, writing | Any chat-completions model |
+| Book Reader OCR (scanned PDFs) | Vision-capable model (e.g. `gpt-4o`, `qwen3.5-397b-a17b`) |
+| Voice / TTS | Provider must support `/v1/audio/speech` (OpenAI only; Groq/Ollama/SAIA will error) |
+| Microphone transcription | Provider must support `/v1/audio/transcriptions` (Whisper) |
 
 ---
 
@@ -247,7 +299,7 @@ When you have finished using the platform and want to exit, do NOT simply close 
 ║  │                                                           │   ║
 ║  │  Routers                    Services                      │   ║
 ║  │  ├─ /books   (reader,OCR)   ├─ ai_service.py              │   ║
-║  │  ├─ /words   (vocab, SM-2)  │    └─ all Gemini calls      │   ║
+║  │  ├─ /words   (vocab, SM-2)  │    └─ Gemini · OpenAI       │   ║
 ║  │  ├─ /grammar (roadmap)      ├─ pdf_service.py             │   ║
 ║  │  ├─ /scenarios (chat)       │    └─ pdfplumber + OCR      │   ║
 ║  │  ├─ /writing  (feedback)    ├─ tts_service.py             │   ║
@@ -273,10 +325,11 @@ When you have finished using the platform and want to exit, do NOT simply close 
 ### Key design decisions
 
 - **Single-user, local-first.** No authentication, no cloud database. All user data (vocabulary, progress, grammar mastery, uploaded PDFs) stays in a single SQLite file on your machine.
-- **Lazy Gemini client.** `_get_client()` in `ai_service.py` initialises the Gemini SDK on first use. If no API key is set it raises a friendly error shown in the Settings UI — the app starts cleanly without a key.
+- **Dual AI provider.** `ai_service.py` contains two independent backends — Gemini (`google-genai` SDK) and OpenAI-compatible (`openai` SDK). `_get_provider()` reads the `PROVIDER` env var, falling back to auto-detection: Gemini if `GEMINI_API_KEY` is set, OpenAI if `API_KEY` is set, Gemini if both are set. All public functions (`analyze_word`, `ocr_page`, `generate_tts`, etc.) dispatch transparently to the active backend. Switching provider via the Settings UI writes `PROVIDER` to `.env` and resets the cached clients immediately — no restart needed.
+- **Lazy clients.** Both `_get_gemini_client()` and `_get_openai_client()` initialise on first use. If the required key is missing they raise a friendly error surfaced in the Settings UI — the app starts cleanly without any key set.
 - **Auto-migration.** `database.py` runs `CREATE TABLE IF NOT EXISTS` plus a `_migrate_sqlite()` pass on every startup to add new columns to existing tables without wiping data. No Alembic, no migration files.
-- **Separate TTS tracking.** Text and TTS calls are recorded in distinct buckets in `usage.json` because they have very different per-token prices ($0.30/$2.50 vs $0.50/$10.00 per 1M). The Settings page shows both breakdowns and links to AI Studio for accurate real-time figures.
-- **Neural TTS only.** All voice output uses `gemini-2.5-flash-preview-tts` (PCM16 audio wrapped in a WAV header server-side). There is no browser `speechSynthesis` fallback — consistent quality over silent degradation.
+- **Separate TTS tracking.** Text and TTS calls are recorded in distinct buckets in `usage.json` because they have very different per-token prices ($0.30/$2.50 vs $0.50/$10.00 per 1M). The Settings page shows both breakdowns and, when on Gemini, links to AI Studio for accurate real-time figures.
+- **Neural TTS only.** Voice output uses `gemini-2.5-flash-preview-tts` on the Gemini path (PCM16 wrapped in a WAV header server-side) or `/v1/audio/speech` (WAV) on the OpenAI path. There is no browser `speechSynthesis` fallback — consistent quality over silent degradation. Providers that do not expose a TTS endpoint will return an error when voice features are used.
 - **Bidirectional text.** When the AI responds in a right-to-left language (Persian, Arabic) and includes German example sentences, the reader chat wraps each German segment in `dir="ltr" unicode-bidi: isolate` so word order renders correctly in both directions simultaneously.
 
 ---
@@ -289,9 +342,24 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env            # add your GEMINI_API_KEY
+cp .env.example .env            # add your API key — see provider options below
 uvicorn main:app --reload --port 8000
 ```
+
+Minimum `.env` for **Gemini** (default):
+```env
+GEMINI_API_KEY=AQ.your-key-here
+```
+
+Minimum `.env` for an **OpenAI-compatible** provider:
+```env
+API_KEY=your-key-here
+API_BASE_URL=https://api.openai.com/v1   # or any compatible endpoint
+MODEL=gpt-4o-mini
+PROVIDER=openai
+```
+
+See `backend/.env.example` for the full list of options and per-provider examples.
 
 **Frontend**
 ```bash
@@ -339,7 +407,7 @@ DeutschPath/
 │   │   ├── settings.py       # API key, usage stats, backup/restore
 │   │   └── users.py          # User profile, daily goal, stats
 │   └── services/
-│       ├── ai_service.py     # All Gemini calls (analysis, chat, OCR, TTS, transcription)
+│       ├── ai_service.py     # Dual-provider: Gemini + OpenAI-compatible (analysis, chat, OCR, TTS, transcription)
 │       ├── pdf_service.py    # PDF text extraction (pdfplumber + Gemini OCR fallback)
 │       ├── tts_service.py    # gTTS stub (unused — kept for reference)
 │       └── usage_tracker.py  # Token/cost tracking per call type → usage.json

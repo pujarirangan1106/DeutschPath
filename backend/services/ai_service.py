@@ -1,45 +1,46 @@
 import os
 import json
-from google import genai
+import base64
 from dotenv import load_dotenv
 from services.usage_tracker import record as _record_usage, record_tts as _record_tts_usage
 
 load_dotenv()
 
-MODEL = "gemini-2.5-flash"
-_client: genai.Client | None = None
+# ── Provider selection ─────────────────────────────────────────────────────────
+
+def _get_provider() -> str:
+    """Return 'gemini' or 'openai'. Explicit PROVIDER env var wins; otherwise
+    auto-detect: Gemini if GEMINI_API_KEY is set, else OpenAI if API_KEY is set."""
+    explicit = os.getenv("PROVIDER", "").strip().lower()
+    if explicit in ("gemini", "openai"):
+        return explicit
+    if os.getenv("GEMINI_API_KEY", "").strip():
+        return "gemini"
+    if os.getenv("API_KEY", "").strip():
+        return "openai"
+    return "gemini"
 
 
-def _get_client() -> genai.Client:
-    global _client
-    if _client is None:
+# ── Gemini client ──────────────────────────────────────────────────────────────
+
+GEMINI_MODEL = "gemini-2.5-flash"
+_gemini_client = None
+
+
+def _get_gemini_client():
+    global _gemini_client
+    if _gemini_client is None:
+        from google import genai
         key = os.getenv("GEMINI_API_KEY", "").strip()
         if not key:
             raise RuntimeError(
                 "Gemini API key not set. Open the app, go to Settings, and add your free key."
             )
-        _client = genai.Client(api_key=key)
-    return _client
+        _gemini_client = genai.Client(api_key=key)
+    return _gemini_client
 
 
-def reinit_client(api_key: str):
-    """Re-initialise the Gemini client after an API key update (no restart needed)."""
-    global _client
-    _client = genai.Client(api_key=api_key)
-
-
-def test_connection(api_key: str | None = None) -> dict:
-    """Verify a Gemini key by listing models (no tokens consumed)."""
-    try:
-        client = genai.Client(api_key=api_key) if api_key else _get_client()
-        for _ in client.models.list():
-            break
-        return {"ok": True}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
-
-
-def _record(response) -> None:
+def _record_gemini(response) -> None:
     try:
         meta = response.usage_metadata
         if meta:
@@ -52,7 +53,7 @@ def _record(response) -> None:
         pass
 
 
-def _record_tts(response) -> None:
+def _record_gemini_tts(response) -> None:
     try:
         meta = response.usage_metadata
         if meta:
@@ -64,28 +65,427 @@ def _record_tts(response) -> None:
         pass
 
 
-def _call(prompt: str) -> str:
+def _gemini_call(prompt: str) -> str:
     import time
     from google.genai import types
 
     last_exc: Exception = RuntimeError("No attempts made")
     for attempt in range(3):
         try:
-            response = _get_client().models.generate_content(
-                model=MODEL,
+            response = _get_gemini_client().models.generate_content(
+                model=GEMINI_MODEL,
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     thinking_config=types.ThinkingConfig(thinking_budget=0),
                 ),
             )
-            _record(response)
+            _record_gemini(response)
             return response.text
         except Exception as exc:
             last_exc = exc
             if attempt < 2:
-                time.sleep(2 ** attempt)  # 1 s, then 2 s
+                time.sleep(2 ** attempt)
     raise last_exc
 
+
+def _gemini_call_with_image(text_prompt: str, image_bytes: bytes, mime_type: str) -> str:
+    from google.genai import types
+
+    response = _get_gemini_client().models.generate_content(
+        model=GEMINI_MODEL,
+        contents=types.Content(
+            role="user",
+            parts=[
+                types.Part.from_text(text=text_prompt),
+                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+            ],
+        ),
+        config=types.GenerateContentConfig(
+            thinking_config=types.ThinkingConfig(thinking_budget=0),
+        ),
+    )
+    _record_gemini(response)
+    return response.text.strip()
+
+
+async def _gemini_tts(text: str, voice: str = "Aoede") -> bytes:
+    import asyncio
+    import struct
+    import time
+    from google.genai import types
+
+    def _do():
+        last_exc: Exception = RuntimeError("No attempts made")
+        for attempt in range(2):
+            try:
+                response = _get_gemini_client().models.generate_content(
+                    model="gemini-2.5-flash-preview-tts",
+                    contents=types.Content(
+                        role="user",
+                        parts=[types.Part.from_text(text=text)],
+                    ),
+                    config=types.GenerateContentConfig(
+                        response_modalities=["AUDIO"],
+                        speech_config=types.SpeechConfig(
+                            voice_config=types.VoiceConfig(
+                                prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                    voice_name=voice,
+                                )
+                            )
+                        ),
+                    ),
+                )
+                _record_gemini_tts(response)
+                if not response.candidates:
+                    raise RuntimeError("Gemini TTS returned no candidates")
+                parts = response.candidates[0].content.parts
+                if not parts or not parts[0].inline_data or not parts[0].inline_data.data:
+                    raise RuntimeError("Gemini TTS returned no audio data")
+                pcm = parts[0].inline_data.data
+                if isinstance(pcm, str):
+                    import base64 as _b64
+                    pcm = _b64.b64decode(pcm)
+                sr, ch, bits = 24000, 1, 16
+                data_len = len(pcm)
+                header = struct.pack(
+                    "<4sI4s4sIHHIIHH4sI",
+                    b"RIFF", 36 + data_len, b"WAVE",
+                    b"fmt ", 16, 1, ch, sr,
+                    sr * ch * bits // 8, ch * bits // 8, bits,
+                    b"data", data_len,
+                )
+                return header + pcm
+            except Exception as exc:
+                last_exc = exc
+                if attempt < 1:
+                    time.sleep(1)
+        raise last_exc
+
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _do)
+
+
+async def _gemini_transcribe(audio_bytes: bytes, mime_type: str = "audio/webm") -> str:
+    import asyncio
+    from google.genai import types
+
+    clean_mime = (mime_type or "audio/webm").split(";")[0].strip()
+
+    def _do():
+        response = _get_gemini_client().models.generate_content(
+            model=GEMINI_MODEL,
+            contents=types.Content(
+                role="user",
+                parts=[
+                    types.Part.from_text(text=(
+                        "Transcribe the spoken words in this audio exactly as said. "
+                        "Return ONLY the transcription text, nothing else."
+                    )),
+                    types.Part.from_bytes(data=audio_bytes, mime_type=clean_mime),
+                ],
+            ),
+            config=types.GenerateContentConfig(
+                thinking_config=types.ThinkingConfig(thinking_budget=0),
+            ),
+        )
+        _record_gemini(response)
+        return (response.text or "").strip()
+
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _do)
+
+
+# ── OpenAI-compatible client ───────────────────────────────────────────────────
+
+_openai_client = None
+
+
+def _get_openai_model() -> str:
+    return os.getenv("MODEL", "gpt-4o-mini").strip()
+
+
+def _get_openai_client():
+    global _openai_client
+    if _openai_client is None:
+        from openai import OpenAI
+        key = os.getenv("API_KEY", "").strip()
+        if not key:
+            raise RuntimeError(
+                "API key not set. Open the app, go to Settings, and add your API key."
+            )
+        base_url = os.getenv("API_BASE_URL", "https://api.openai.com/v1").strip()
+        _openai_client = OpenAI(api_key=key, base_url=base_url, timeout=90.0, max_retries=0)
+    return _openai_client
+
+
+def _record_openai(response) -> None:
+    try:
+        usage = response.usage
+        if usage:
+            _record_usage(
+                input_tokens=usage.prompt_tokens or 0,
+                output_tokens=usage.completion_tokens or 0,
+                thought_tokens=0,
+            )
+    except Exception:
+        pass
+
+
+# Models confirmed (by direct testing against SAIA) to burn their entire token budget on
+# hidden reasoning and return content: null / finish_reason: "length" unless thinking is
+# explicitly disabled via chat_template_kwargs. Qwen-family vLLM deployments honor this;
+# it's a no-op (harmlessly ignored) on endpoints/models that don't support the field.
+QWEN_THINKING_MODELS = {"qwen3.5-397b-a17b", "qwen3.5-122b-a10b", "qwen3.6-35b-a3b"}
+
+# gpt-oss uses OpenAI's "harmony" reasoning format instead — chat_template_kwargs doesn't
+# suppress it, but reasoning_effort does.
+GPT_OSS_REASONING_MODELS = {"openai-gpt-oss-120b"}
+
+
+def _extra_body_for_model(model: str) -> dict | None:
+    if model in QWEN_THINKING_MODELS:
+        return {"chat_template_kwargs": {"enable_thinking": False}}
+    if model in GPT_OSS_REASONING_MODELS:
+        return {"reasoning_effort": "low"}
+    return None
+
+
+def _openai_call(prompt: str) -> str:
+    model = _get_openai_model()
+    response = _get_openai_client().chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        extra_body=_extra_body_for_model(model),
+    )
+    _record_openai(response)
+    return response.choices[0].message.content or ""
+
+
+# Fallback allowlist for endpoints whose /models response doesn't advertise per-model
+# input modalities (e.g. real api.openai.com). Used only when a live capability lookup
+# (see fetch_openai_models / _model_supports_vision below) isn't available.
+OPENAI_VISION_MODELS = {
+    "gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-4.1", "gpt-4.1-mini",
+    "qwen3.5-397b-a17b", "qwen3.5-122b-a10b", "qwen3.6-35b-a3b",
+    "qwen3-omni-30b-a3b-instruct", "gemma-4-31b-it",
+}
+
+# Populated by fetch_openai_models() (called from the Settings "browse models" UI) —
+# model id -> True/False. Lets _model_supports_vision give a real answer instead of
+# just consulting the static allowlist above.
+_vision_capability_cache: dict[str, bool] = {}
+
+
+def fetch_openai_models(api_key: str, base_url: str) -> list[dict]:
+    """Query the configured OpenAI-compatible endpoint's /models list and tag each
+    model with whether it accepts image input, so the Settings UI can show a real
+    dropdown instead of a free-text field the user has to guess at."""
+    from openai import OpenAI
+    client = OpenAI(api_key=api_key, base_url=base_url, timeout=20.0, max_retries=0)
+    resp = client.models.list()
+    models = []
+    for m in resp.data:
+        raw = m.model_dump() if hasattr(m, "model_dump") else dict(m)
+        model_id = raw.get("id")
+        if not model_id:
+            continue
+        input_modalities = raw.get("input")
+        if input_modalities:
+            vision = "image" in input_modalities
+        else:
+            # Endpoint doesn't report modalities (e.g. real OpenAI) — best guess only.
+            vision = model_id in OPENAI_VISION_MODELS
+        _vision_capability_cache[model_id] = vision
+        models.append({"id": model_id, "name": raw.get("name") or model_id, "vision": vision})
+    return sorted(models, key=lambda m: m["id"])
+
+
+def _model_supports_vision(model: str) -> bool | None:
+    """True/False if known, None if we've never seen this model's capabilities."""
+    if model in _vision_capability_cache:
+        return _vision_capability_cache[model]
+    if model in OPENAI_VISION_MODELS:
+        return True
+    return None
+
+
+def _openai_call_with_image(text_prompt: str, image_bytes: bytes, mime_type: str) -> str:
+    b64 = base64.b64encode(image_bytes).decode()
+    model = _get_openai_model()
+    response = _get_openai_client().chat.completions.create(
+        model=model,
+        messages=[{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": text_prompt},
+                {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64}"}},
+            ],
+        }],
+        extra_body=_extra_body_for_model(model),
+    )
+    _record_openai(response)
+    return response.choices[0].message.content or ""
+
+
+async def _openai_tts(text: str, voice: str | None = None) -> bytes:
+    import asyncio
+
+    def _do():
+        response = _get_openai_client().audio.speech.create(
+            model=os.getenv("TTS_MODEL", "tts-1").strip(),
+            input=text,
+            voice=voice or os.getenv("TTS_VOICE", "alloy").strip(),
+            response_format="wav",
+        )
+        return response.read()
+
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _do)
+
+
+# Cached per (base_url, tts_model) — None means "not checked yet since the key/endpoint
+# was last (re)loaded". Reset by reinit_client() whenever the OpenAI-compatible
+# key/base_url changes, so it's rechecked lazily on the next TTS request rather than
+# blocking the settings-save request with a network call.
+_openai_tts_capability: bool | None = None
+
+
+def _check_openai_tts_capability() -> bool:
+    """Real one-shot probe of the configured OpenAI-compatible endpoint's TTS support,
+    cached until the key/base_url changes. Most OpenAI-compatible endpoints (e.g. SAIA)
+    don't advertise TTS models in /models, so the only reliable check is a real call."""
+    global _openai_tts_capability
+    if _openai_tts_capability is not None:
+        return _openai_tts_capability
+    try:
+        _get_openai_client().audio.speech.create(
+            model=os.getenv("TTS_MODEL", "tts-1").strip(),
+            input="Test",
+            voice=os.getenv("TTS_VOICE", "alloy").strip(),
+            response_format="wav",
+        )
+        _openai_tts_capability = True
+    except Exception:
+        _openai_tts_capability = False
+    return _openai_tts_capability
+
+
+async def _openai_transcribe(audio_bytes: bytes, mime_type: str = "audio/webm") -> str:
+    import asyncio
+    import io
+
+    clean_mime = (mime_type or "audio/webm").split(";")[0].strip()
+    ext = clean_mime.split("/")[-1]
+
+    def _do():
+        buf = io.BytesIO(audio_bytes)
+        buf.name = f"audio.{ext}"
+        response = _get_openai_client().audio.transcriptions.create(
+            model="whisper-1",
+            file=buf,
+        )
+        return (response.text or "").strip()
+
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, _do)
+
+
+# ── Provider-dispatched helpers ────────────────────────────────────────────────
+
+def _call(prompt: str) -> str:
+    if _get_provider() == "openai":
+        return _openai_call(prompt)
+    return _gemini_call(prompt)
+
+
+def _call_with_image(text_prompt: str, image_bytes: bytes, mime_type: str = "image/png") -> str:
+    if _get_provider() == "openai":
+        model = _get_openai_model()
+        supports = _model_supports_vision(model)
+        if supports is False:
+            raise RuntimeError(
+                f"The configured model '{model}' does not support image input. "
+                "Pick a vision-capable model in Settings (look for the camera icon), "
+                "or switch the AI Provider to Gemini for this feature."
+            )
+        try:
+            return _openai_call_with_image(text_prompt, image_bytes, mime_type)
+        except Exception as e:
+            # Only treat this as "not vision-capable" for signatures that actually mean
+            # that (e.g. SAIA's "X is not a multimodal model") — a generic image-decode
+            # or truncated-file error is not proof the model lacks vision.
+            msg = str(e).lower()
+            if "not a multimodal model" in msg or "does not support image" in msg or "does not support vision" in msg:
+                _vision_capability_cache[model] = False
+                raise RuntimeError(
+                    f"Model '{model}' does not support image input. "
+                    f"Pick a vision-capable model in Settings. (Provider error: {e})"
+                ) from e
+            raise
+    return _gemini_call_with_image(text_prompt, image_bytes, mime_type)
+
+
+# ── Client lifecycle ───────────────────────────────────────────────────────────
+
+def reinit_client(api_key: str = "", base_url: str = "", model: str = "", provider: str = ""):
+    """Re-initialise clients after a settings update (no restart needed)."""
+    global _gemini_client, _openai_client, _openai_tts_capability
+    if provider:
+        os.environ["PROVIDER"] = provider
+    if api_key:
+        # Determine which env var to set based on key format / provider
+        if _get_provider() == "gemini" or provider == "gemini":
+            os.environ["GEMINI_API_KEY"] = api_key
+        else:
+            os.environ["API_KEY"] = api_key
+    if base_url:
+        os.environ["API_BASE_URL"] = base_url
+    if model:
+        os.environ["MODEL"] = model
+    _gemini_client = None
+    _openai_client = None
+    # Endpoint/key changed — the cached "does this OpenAI-compatible endpoint support
+    # TTS?" answer no longer applies; recheck lazily on the next TTS request.
+    _openai_tts_capability = None
+
+
+def test_connection(api_key: str | None = None, base_url: str | None = None, provider: str | None = None) -> dict:
+    """Verify connectivity for the active (or specified) provider."""
+    active = provider or _get_provider()
+    try:
+        if active == "openai":
+            import openai as _openai
+            key = api_key or os.getenv("API_KEY", "").strip()
+            url = base_url or os.getenv("API_BASE_URL", "https://api.openai.com/v1").strip()
+            if not key:
+                return {"ok": False, "error": "No API key — enter and save your key first."}
+            client = _openai.OpenAI(api_key=key, base_url=url, timeout=60.0, max_retries=0)
+            try:
+                client.chat.completions.create(
+                    model=_get_openai_model(),
+                    messages=[{"role": "user", "content": "ping"}],
+                    max_tokens=1,
+                )
+            except _openai.AuthenticationError:
+                return {"ok": False, "error": "Authentication failed — your API key was rejected. Check that the key is correct and has not expired."}
+            except _openai.NotFoundError:
+                return {"ok": False, "error": f"Model '{_get_openai_model()}' not found on this endpoint. Update the Model field to a model supported by your provider."}
+            except _openai.APIConnectionError as e:
+                return {"ok": False, "error": f"Cannot reach endpoint — check the Base URL is correct. ({e})"}
+        else:
+            from google import genai
+            key = api_key or os.getenv("GEMINI_API_KEY", "").strip()
+            if not key:
+                return {"ok": False, "error": "No Gemini API key — enter and save your key first."}
+            client = genai.Client(api_key=key)
+            for _ in client.models.list():
+                break
+        return {"ok": True}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+# ── JSON parsing ───────────────────────────────────────────────────────────────
 
 def _parse_json(text: str) -> dict | list:
     text = text.strip()
@@ -96,6 +496,8 @@ def _parse_json(text: str) -> dict | list:
             text = text[4:]
     return json.loads(text.strip())
 
+
+# ── Public AI functions ────────────────────────────────────────────────────────
 
 async def analyze_word(german_text: str, context_sentence: str = "", user_level: str = "A1") -> dict:
     prompt = f"""You are a German language expert. Analyze this German word/phrase.
@@ -221,53 +623,27 @@ suggestions: 2-3 short natural German phrases (4-8 words each) the user could pl
 
 
 async def ocr_page(image_bytes: bytes, mime_type: str = "image/png") -> str:
-    """Use Gemini Vision to OCR a scanned PDF page or photo."""
-    from google.genai import types
-    response = _get_client().models.generate_content(
-        model=MODEL,
-        contents=types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=(
-                    "Extract all the text from this German document page image exactly as it appears. "
-                    "Preserve paragraph breaks with blank lines. Return only the raw text — no explanations, "
-                    "no markdown, no commentary."
-                )),
-                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-            ],
-        ),
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
-    )
-    _record(response)
-    return response.text.strip()
+    return _call_with_image(
+        "Extract all the text from this German document page image exactly as it appears. "
+        "Preserve paragraph breaks with blank lines. Return only the raw text — no explanations, "
+        "no markdown, no commentary.",
+        image_bytes,
+        mime_type,
+    ).strip()
 
 
 async def ocr_region_corrected(full_page_bytes: bytes, region: dict) -> str:
-    """Crop around the target region (with context padding), scale up for OCR quality,
-    then draw a red border marking the exact selection before sending to Gemini.
-
-    Strategy rationale:
-    - Full-page send: target region = tiny fraction → Gemini downsamples it too aggressively.
-    - Raw crop: no surrounding context → hallucination on ambiguous characters.
-    - Padded crop + upscale + red border: enough context, enough pixels, clear target.
-
-    region keys: x, y, w, h — fractional 0..1 relative to page dimensions.
-    """
     from PIL import Image as PILImage, ImageDraw
     import io as _io
 
     img = PILImage.open(_io.BytesIO(full_page_bytes)).convert("RGB")
     iw, ih = img.size
 
-    # Target region in pixels
     rx = region["x"] * iw
     ry = region["y"] * ih
     rw = region["w"] * iw
     rh = region["h"] * ih
 
-    # Pad 20 % of the region's size on each side for surrounding context
     pad_x = rw * 0.20
     pad_y = rh * 0.20
 
@@ -279,7 +655,6 @@ async def ocr_region_corrected(full_page_bytes: bytes, region: dict) -> str:
     cropped = img.crop((crop_l, crop_t, crop_r, crop_b))
     cw, ch = cropped.size
 
-    # Scale so the longest side sits around 1 800 px — enough detail for dense text
     TARGET = 1800
     MAX_PX = 2400
     longest = max(cw, ch)
@@ -293,7 +668,6 @@ async def ocr_region_corrected(full_page_bytes: bytes, region: dict) -> str:
     if abs(sf - 1.0) > 0.02:
         cropped = cropped.resize((max(1, round(cw * sf)), max(1, round(ch * sf))), PILImage.LANCZOS)
 
-    # Draw red rectangle for the exact target (offset by crop origin, then scaled)
     tl = round((rx - crop_l) * sf)
     tt = round((ry - crop_t) * sf)
     tr = round((rx + rw - crop_l) * sf)
@@ -306,57 +680,30 @@ async def ocr_region_corrected(full_page_bytes: bytes, region: dict) -> str:
     buf = _io.BytesIO()
     cropped.save(buf, format="PNG")
 
-    from google.genai import types
-    response = _get_client().models.generate_content(
-        model=MODEL,
-        contents=types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=(
-                    "This shows a section of a scanned German document. "
-                    "A red rectangle marks the exact area to read. "
-                    "Extract ONLY the German text inside the red rectangle. "
-                    "Text just outside the rectangle is shown for context — do not include it. "
-                    "Correct any scanning artifacts using German spelling and grammar. "
-                    "Return only the extracted text — no explanations, no markdown."
-                )),
-                types.Part.from_bytes(data=buf.getvalue(), mime_type="image/png"),
-            ],
-        ),
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
-    )
-    _record(response)
-    return response.text.strip()
+    return _call_with_image(
+        "This shows a section of a scanned German document. "
+        "A red rectangle marks the exact area to read. "
+        "Extract ONLY the German text inside the red rectangle. "
+        "Text just outside the rectangle is shown for context — do not include it. "
+        "Correct any scanning artifacts using German spelling and grammar. "
+        "Return only the extracted text — no explanations, no markdown.",
+        buf.getvalue(),
+        "image/png",
+    ).strip()
 
 
 async def analyze_page_image(image_bytes: bytes, mime_type: str = "image/png", lang_name: str = "English") -> str:
-    """Send a full page image to Gemini and return a study explanation."""
-    from google.genai import types
-    response = _get_client().models.generate_content(
-        model=MODEL,
-        contents=types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=(
-                    f"You are a German teacher giving a student a quick heads-up before they study this page. "
-                    f"Write in {lang_name}.\n"
-                    f"Start with one sentence saying what the page is about overall.\n"
-                    f"If the page has multiple distinct sections or exercises, add a bullet for each one on its own line, like:\n"
-                    f"• Section name: one sentence saying what to do.\n"
-                    f"If it is just one block of content with no sections, stop after the first sentence — do not add bullets.\n"
-                    f"Do not use markdown bold (**). Do not add a header or title. Sound like a teacher, not a report."
-                )),
-                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-            ],
-        ),
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
-    )
-    _record(response)
-    return response.text.strip()
+    return _call_with_image(
+        f"You are a German teacher giving a student a quick heads-up before they study this page. "
+        f"Write in {lang_name}.\n"
+        f"Start with one sentence saying what the page is about overall.\n"
+        f"If the page has multiple distinct sections or exercises, add a bullet for each one on its own line, like:\n"
+        f"• Section name: one sentence saying what to do.\n"
+        f"If it is just one block of content with no sections, stop after the first sentence — do not add bullets.\n"
+        f"Do not use markdown bold (**). Do not add a header or title. Sound like a teacher, not a report.",
+        image_bytes,
+        mime_type,
+    ).strip()
 
 
 async def batch_analyze_words(
@@ -418,7 +765,6 @@ Use the exact ISO 639-1 language codes shown as keys in "translations" and "exam
     result = _parse_json(_call(prompt))
     items = result if isinstance(result, list) else [result]
 
-    # Backfill legacy english/persian fields for backward compat
     for item in items:
         t = item.get("translations", {})
         if not item.get("english"):
@@ -435,7 +781,6 @@ Use the exact ISO 639-1 language codes shown as keys in "translations" and "exam
 
 
 async def translate_text(text: str, target_language: str) -> str:
-    """Translate a grammar explanation into the target language."""
     prompt = f"""Translate the following grammar explanation into {target_language}.
 Return ONLY the translation — no introductory text, no quotes, no extra formatting.
 
@@ -644,18 +989,6 @@ Return ONLY valid JSON — no markdown fences, no commentary outside the JSON:
       "original": "weil er kommt heute",
       "corrected": "weil er heute kommt",
       "explanation": "In a subordinate clause introduced by 'weil', the finite verb must move to the end of the clause."
-    }},
-    {{
-      "type": "capitalization",
-      "original": "die familie",
-      "corrected": "die Familie",
-      "explanation": "All nouns are capitalised in German. 'Familie' is a noun."
-    }},
-    {{
-      "type": "punctuation",
-      "original": "Ich glaube dass er kommt.",
-      "corrected": "Ich glaube, dass er kommt.",
-      "explanation": "A comma is required before 'dass' (and all subordinating conjunctions) in German."
     }}
   ],
   "vocabulary_suggestions": [
@@ -667,12 +1000,12 @@ Return ONLY valid JSON — no markdown fences, no commentary outside the JSON:
   ],
   "structure": {{
     "score": 6,
-    "feedback": "The text has a beginning and end but lacks clear paragraph structure. Transitions between ideas are missing."
+    "feedback": "The text has a beginning and end but lacks clear paragraph structure."
   }},
   "exam_feedback": null,
-  "general_feedback": "Your vocabulary is appropriate for the level and your ideas are clear. Focus on subordinate clause word order and noun capitalisation — these are the two most frequent error types in your text.",
+  "general_feedback": "Focus on subordinate clause word order and noun capitalisation.",
   "strengths": ["Clear main idea", "Appropriate vocabulary for A2"],
-  "improvements": ["Verb placement in subordinate clauses (weil, dass, wenn)", "Capitalise all nouns", "Add transition words between sentences"]
+  "improvements": ["Verb placement in subordinate clauses", "Capitalise all nouns"]
 }}"""
 
     import asyncio
@@ -755,8 +1088,6 @@ If the student attempted an exercise and made an error, set:
 
 
 async def read_page_context(image_bytes: bytes, mime_type: str = "image/png") -> str:
-    """Deep-extract all content from a page image for use as chat context."""
-    from google.genai import types
     prompt = (
         "You are a German language tutor preparing detailed study notes from a textbook page.\n\n"
         "Review this page and write structured notes that cover:\n"
@@ -769,38 +1100,16 @@ async def read_page_context(image_bytes: bytes, mime_type: str = "image/png") ->
         "Write as a teacher's preparation notes — thorough enough that a student can ask any "
         "specific question about this page and you can answer it accurately from these notes alone."
     )
-    response = _get_client().models.generate_content(
-        model=MODEL,
-        contents=types.Content(
-            role="user",
-            parts=[
-                types.Part.from_text(text=prompt),
-                types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-            ],
-        ),
-        config=types.GenerateContentConfig(
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
-    )
-    _record(response)
-    text = response.text
+    text = _call_with_image(prompt, image_bytes, mime_type).strip()
     if not text:
-        # Surface finish_reason so the caller can give a useful error message
-        try:
-            reason = response.candidates[0].finish_reason.name
-        except Exception:
-            reason = "UNKNOWN"
-        raise RuntimeError(f"Gemini returned no content (finish_reason={reason})")
-    return text.strip()
+        raise RuntimeError("Model returned no content for page context extraction")
+    return text
 
 
 def _detect_reply_language(text: str) -> str | None:
-    """Return the language the student wrote in, or None to let the model decide."""
     import re
-    # Persian / Arabic script
     if re.search(r'[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]', text):
         return "Persian"
-    # English: any common English function word present (case-insensitive)
     EN_WORDS = {
         'what','how','why','when','where','who','is','are','can','could','tell',
         'me','the','a','an','i','you','we','they','do','does','did','have','has',
@@ -880,90 +1189,32 @@ User: {user_msg}"""
 
 
 async def transcribe_audio(audio_bytes: bytes, mime_type: str = "audio/webm") -> str:
-    """Transcribe spoken audio via Gemini."""
-    import asyncio
-    from google.genai import types
-
-    clean_mime = (mime_type or "audio/webm").split(";")[0].strip()
-
-    def _do():
-        response = _get_client().models.generate_content(
-            model=MODEL,
-            contents=types.Content(
-                role="user",
-                parts=[
-                    types.Part.from_text(text=(
-                        "Transcribe the spoken words in this audio exactly as said. "
-                        "Return ONLY the transcription text, nothing else."
-                    )),
-                    types.Part.from_bytes(data=audio_bytes, mime_type=clean_mime),
-                ],
-            ),
-            config=types.GenerateContentConfig(
-                thinking_config=types.ThinkingConfig(thinking_budget=0),
-            ),
-        )
-        _record(response)
-        return (response.text or "").strip()
-
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, _do)
+    if _get_provider() == "openai":
+        return await _openai_transcribe(audio_bytes, mime_type)
+    return await _gemini_transcribe(audio_bytes, mime_type)
 
 
-async def gemini_tts(text: str, voice: str = "Aoede") -> bytes:
-    """Generate speech via Gemini TTS. Returns WAV bytes (PCM16, 24 kHz, mono)."""
-    import asyncio
-    import struct
-    import time
-    from google.genai import types
+async def generate_tts(text: str, voice: str | None = None) -> tuple[bytes, str]:
+    """Generate speech. Returns (audio_bytes, mime_type).
 
-    def _do():
-        last_exc: Exception = RuntimeError("No attempts made")
-        for attempt in range(2):
-            try:
-                response = _get_client().models.generate_content(
-                    model="gemini-2.5-flash-preview-tts",
-                    contents=types.Content(
-                        role="user",
-                        parts=[types.Part.from_text(text=text)],
-                    ),
-                    config=types.GenerateContentConfig(
-                        response_modalities=["AUDIO"],
-                        speech_config=types.SpeechConfig(
-                            voice_config=types.VoiceConfig(
-                                prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                                    voice_name=voice,
-                                )
-                            )
-                        ),
-                    ),
-                )
-                _record_tts(response)
-                if not response.candidates:
-                    raise RuntimeError("Gemini TTS returned no candidates")
-                parts = response.candidates[0].content.parts
-                if not parts or not parts[0].inline_data or not parts[0].inline_data.data:
-                    raise RuntimeError("Gemini TTS returned no audio data")
-                pcm = parts[0].inline_data.data
-                if isinstance(pcm, str):
-                    import base64
-                    pcm = base64.b64decode(pcm)
-                # Wrap raw PCM16 in a standard WAV container
-                sr, ch, bits = 24000, 1, 16
-                data_len = len(pcm)
-                header = struct.pack(
-                    "<4sI4s4sIHHIIHH4sI",
-                    b"RIFF", 36 + data_len, b"WAVE",
-                    b"fmt ", 16, 1, ch, sr,
-                    sr * ch * bits // 8, ch * bits // 8, bits,
-                    b"data", data_len,
-                )
-                return header + pcm
-            except Exception as exc:
-                last_exc = exc
-                if attempt < 1:
-                    time.sleep(1)
-        raise last_exc
+    Priority: (1) the configured OpenAI-compatible endpoint, if it actually supports TTS
+    (checked once, cached — most don't, e.g. SAIA has none at all); (2) Gemini, if a key
+    is set — confirmed more natural-sounding than gTTS, but rate-limited to 10 req/min on
+    the free tier; (3) gTTS, which needs no key and never rate-limits, as the universal
+    last-resort fallback so voice generation always works regardless of provider setup.
+    """
+    if _get_provider() == "openai" and _check_openai_tts_capability():
+        return await _openai_tts(text, voice), "audio/wav"
 
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, _do)
+    if os.getenv("GEMINI_API_KEY", "").strip():
+        try:
+            return await _gemini_tts(text, voice or "Aoede"), "audio/wav"
+        except Exception:
+            pass  # quota/rate-limited or otherwise unavailable — fall through to gTTS
+
+    from services.tts_service import synthesize
+    return synthesize(text, lang="de"), "audio/mpeg"
+
+
+# Legacy alias
+gemini_tts = generate_tts
