@@ -378,7 +378,8 @@
       "removeKey": "Anahtar kaldırılamadı",
       "restore": "Geri yükleme başarısız oldu",
       "reset": "Sıfırlama başarısız oldu. Lütfen tekrar deneyin.",
-      "delete": "Silme başarısız oldu. Lütfen tekrar deneyin."
+      "delete": "Silme başarısız oldu. Lütfen tekrar deneyin.",
+      "saveUiLang": "Dil seçimi kaydedilemedi, ancak bu oturum için uygulandı."
     },
     "uiLang": {
       "heading": "Uygulama Dili",

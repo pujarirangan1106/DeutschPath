@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useAppStore } from "@/src/lib/store";
 import { SUPPORTED_LANGUAGES } from "@/src/lib/languages";
 import type { Language } from "@/src/lib/languages";
-import { UI_LOCALES, UI_LOCALE_LABELS, type UiLocale } from "@/src/i18n/config";
+import { UI_LOCALES, UI_LOCALE_LABELS, dirFor, type UiLocale } from "@/src/i18n/config";
 import { applyUiLocaleCookie } from "@/src/lib/locale";
 import { getSettings, saveSettings, deleteApiKey, getUsage, resetUsage, testApiConnection, getProfile, updateProfile } from "@/src/lib/api";
 import { Key, Globe, BookOpen, Check, Eye, EyeOff, Save, Loader2, Lock, Trash2, AlertTriangle, RotateCcw, X, Activity, Zap, Info, Target, HardDrive, Download, Upload, Languages } from "lucide-react";
@@ -39,6 +39,7 @@ export default function SettingsPage() {
 
   // UI language (app chrome) — persisted per-user in the backend
   const [uiLangSaving, setUiLangSaving] = useState(false);
+  const [uiLangError, setUiLangError] = useState("");
 
   // Language state
   const currentSecondary = translationLanguages.find((l) => l.code !== "en");
@@ -129,9 +130,15 @@ export default function SettingsPage() {
   const handleSelectUiLocale = async (code: UiLocale) => {
     if (code === uiLocale || uiLangSaving) return;
     setUiLangSaving(true);
+    setUiLangError("");
     try {
       await updateProfile({ ui_language: code });
-    } catch { /* still switch locally — cookie is the render source */ }
+    } catch {
+      // still switch locally — cookie is the render source — but surface
+      // that the choice won't survive past this session
+      setUiLangError(t("errors.saveUiLang"));
+      setTimeout(() => setUiLangError(""), 6000);
+    }
     applyUiLocaleCookie(code);
     router.refresh();
     setUiLangSaving(false);
@@ -274,7 +281,7 @@ export default function SettingsPage() {
                   <p className={`text-xs font-semibold leading-tight ${selected ? "text-brand-700 dark:text-brand-300" : "text-slate-700 dark:text-slate-200"}`}>
                     {t(`uiLang.names.${code}`)}
                   </p>
-                  <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight truncate mt-0.5" dir={code === "en" ? "ltr" : "rtl"}>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight truncate mt-0.5" dir={dirFor(code)}>
                     {UI_LOCALE_LABELS[code].nativeName}
                   </p>
                 </div>
@@ -282,6 +289,7 @@ export default function SettingsPage() {
             );
           })}
         </div>
+        {uiLangError && <p className="text-[11px] text-red-500 dark:text-red-400">{uiLangError}</p>}
         <p className="text-[11px] text-slate-400 dark:text-slate-500">{t("uiLang.note")}</p>
       </section>
 

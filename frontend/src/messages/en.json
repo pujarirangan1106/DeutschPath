@@ -378,7 +378,8 @@
       "removeKey": "Failed to remove key",
       "restore": "Restore failed",
       "reset": "Failed to reset. Please try again.",
-      "delete": "Failed to delete. Please try again."
+      "delete": "Failed to delete. Please try again.",
+      "saveUiLang": "Couldn't save your language choice, but it's applied for this session."
     },
     "uiLang": {
       "heading": "App Language",
