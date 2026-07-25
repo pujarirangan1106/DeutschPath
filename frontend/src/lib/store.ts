@@ -9,7 +9,6 @@ const DEFAULT_LANGUAGES: Language[] = [
 
 interface AppState {
   userLevel: string;
-  uiLanguage: "fa" | "en";
   translationLanguages: Language[];
   activeBookId: string | null;
   activePage: number;
@@ -17,7 +16,6 @@ interface AppState {
   // transient — never persisted; used to guard navigation out of active chats
   hasPendingChat: boolean;
   setUserLevel: (level: string) => void;
-  setUiLanguage: (lang: "fa" | "en") => void;
   setTranslationLanguages: (langs: Language[]) => void;
   setActiveBook: (id: string | null, page?: number) => void;
   setActivePage: (page: number) => void;
@@ -28,14 +26,12 @@ export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
       userLevel: "A1",
-      uiLanguage: "fa",
       translationLanguages: DEFAULT_LANGUAGES,
       activeBookId: null,
       activePage: 1,
       bookPages: {},
       hasPendingChat: false,
       setUserLevel: (level) => set({ userLevel: level }),
-      setUiLanguage: (lang) => set({ uiLanguage: lang }),
       setTranslationLanguages: (langs) => set({ translationLanguages: langs }),
       setActiveBook: (id, page) => {
         const remembered = id ? (get().bookPages[id] ?? 1) : 1;
@@ -55,7 +51,6 @@ export const useAppStore = create<AppState>()(
       // exclude hasPendingChat — it must always start false on page load
       partialize: (s) => ({
         userLevel: s.userLevel,
-        uiLanguage: s.uiLanguage,
         translationLanguages: s.translationLanguages,
         activeBookId: s.activeBookId,
         activePage: s.activePage,

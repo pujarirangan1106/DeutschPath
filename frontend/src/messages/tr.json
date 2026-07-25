@@ -379,7 +379,8 @@
       "restore": "Geri yükleme başarısız oldu",
       "reset": "Sıfırlama başarısız oldu. Lütfen tekrar deneyin.",
       "delete": "Silme başarısız oldu. Lütfen tekrar deneyin.",
-      "authFailed": "Kimlik doğrulama başarısız — API anahtarınızın doğru ve kaydedilmiş olduğunu kontrol edin."
+      "authFailed": "Kimlik doğrulama başarısız — API anahtarınızın doğru ve kaydedilmiş olduğunu kontrol edin.",
+      "saveUiLang": "Dil seçimi kaydedilemedi, ancak bu oturum için uygulandı."
     },
     "uiLang": {
       "heading": "Uygulama Dili",

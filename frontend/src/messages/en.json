@@ -379,7 +379,8 @@
       "restore": "Restore failed",
       "reset": "Failed to reset. Please try again.",
       "delete": "Failed to delete. Please try again.",
-      "authFailed": "Authentication failed — check your API key is correct and saved."
+      "authFailed": "Authentication failed — check your API key is correct and saved.",
+      "saveUiLang": "Couldn't save your language choice, but it's applied for this session."
     },
     "uiLang": {
       "heading": "App Language",

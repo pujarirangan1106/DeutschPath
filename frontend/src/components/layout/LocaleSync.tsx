@@ -36,7 +36,10 @@ export function LocaleSync() {
         return;
       }
       if (!desired) {
-        const primary = translationLanguages[0]?.code;
+        // translationLanguages always lists English first when enabled (see
+        // settings/page.tsx handleApplyLangs), so skip it here to find the
+        // user's actual non-English explanation language, if any.
+        const primary = translationLanguages.find((l) => l.code !== "en")?.code;
         desired = isUiLocale(primary) ? primary : DEFAULT_LOCALE;
       }
       if (desired !== currentLocale) {

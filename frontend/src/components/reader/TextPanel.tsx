@@ -98,8 +98,9 @@ function renderLines(text: string): React.ReactNode {
 
     const headMatch = line.match(/^#{1,3}\s+(.*)/);
     if (headMatch) {
+      const rtl = isRtl(headMatch[1]);
       out.push(
-        <p key={key++} className="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mt-2 mb-0.5">
+        <p key={key++} dir={rtl ? "rtl" : "ltr"} className="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mt-2 mb-0.5">
           {headMatch[1]}
         </p>
       );
