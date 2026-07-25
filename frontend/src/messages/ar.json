@@ -380,7 +380,8 @@
       "reset": "فشلت إعادة الضبط. حاول مجددًا.",
       "delete": "فشل الحذف. حاول مجددًا.",
       "authFailed": "فشلت المصادقة — تأكد من صحة مفتاح API وحفظه.",
-      "saveUiLang": "تعذّر حفظ اختيار اللغة، لكن تم تطبيقه لهذه الجلسة."
+      "saveUiLang": "تعذّر حفظ اختيار اللغة، لكن تم تطبيقه لهذه الجلسة.",
+      "saveProvider": "تعذّر تبديل المزوّد — حاول مجددًا."
     },
     "uiLang": {
       "heading": "لغة التطبيق",
@@ -508,7 +509,12 @@
       "baseUrlExamples": "أمثلة:",
       "modelPickedNote": "يُختار النموذج من محدد <b>النموذج النشط</b> بالأعلى بعد حفظ المفتاح.",
       "noKeySetAdd": "لا يوجد مفتاح — أضف واحدًا بالأسفل.",
-      "couldNotLoadModels": "تعذّر تحميل النماذج"
+      "couldNotLoadModels": "تعذّر تحميل النماذج",
+      "geminiOptionLabel": "Gemini (Google)",
+      "tabGemini": "Gemini",
+      "tabOpenai": "متوافق مع OpenAI",
+      "keyRequiredFirst": "أدخل مفتاح API أولًا",
+      "invalidBaseUrl": "يجب أن يبدأ عنوان URL الأساسي بـ http:// أو https://"
     }
   },
   "cases": {

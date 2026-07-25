@@ -21,6 +21,14 @@ def _get_provider() -> str:
     return "gemini"
 
 
+def _safe_error(e: Exception, limit: int = 300) -> str:
+    """Collapse an SDK exception to a single line and cap its length before it
+    reaches the browser — some OpenAI-compatible endpoints (user-supplied
+    API_BASE_URL) echo verbose or multi-line response bodies in error text."""
+    msg = str(e).replace("\n", " ").replace("\r", " ").strip()
+    return msg[:limit] + "…" if len(msg) > limit else msg
+
+
 # ── Gemini client ──────────────────────────────────────────────────────────────
 
 GEMINI_MODEL = "gemini-2.5-flash"
@@ -226,6 +234,7 @@ def _record_openai(response) -> None:
                 input_tokens=usage.prompt_tokens or 0,
                 output_tokens=usage.completion_tokens or 0,
                 thought_tokens=0,
+                provider="openai",
             )
     except Exception:
         pass
@@ -251,14 +260,24 @@ def _extra_body_for_model(model: str) -> dict | None:
 
 
 def _openai_call(prompt: str) -> str:
+    import time
+
     model = _get_openai_model()
-    response = _get_openai_client().chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        extra_body=_extra_body_for_model(model),
-    )
-    _record_openai(response)
-    return response.choices[0].message.content or ""
+    last_exc: Exception = RuntimeError("No attempts made")
+    for attempt in range(3):
+        try:
+            response = _get_openai_client().chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                extra_body=_extra_body_for_model(model),
+            )
+            _record_openai(response)
+            return response.choices[0].message.content or ""
+        except Exception as exc:
+            last_exc = exc
+            if attempt < 2:
+                time.sleep(2 ** attempt)
+    raise last_exc
 
 
 # Fallback allowlist for endpoints whose /models response doesn't advertise per-model
@@ -340,7 +359,12 @@ async def _openai_tts(text: str, voice: str | None = None) -> bytes:
         return response.read()
 
     loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, _do)
+    audio = await loop.run_in_executor(None, _do)
+    # The OpenAI TTS SDK doesn't expose token/usage counts for audio.speech —
+    # record the call so tts_calls stays accurate, without fabricating token
+    # numbers (and therefore without any cost estimate for this provider).
+    _record_tts_usage(input_tokens=0, output_tokens=0, provider="openai")
+    return audio
 
 
 # Cached per (base_url, tts_model) — None means "not checked yet since the key/endpoint
@@ -350,24 +374,44 @@ async def _openai_tts(text: str, voice: str | None = None) -> bytes:
 _openai_tts_capability: bool | None = None
 
 
-def _check_openai_tts_capability() -> bool:
+async def _check_openai_tts_capability() -> bool:
     """Real one-shot probe of the configured OpenAI-compatible endpoint's TTS support,
     cached until the key/base_url changes. Most OpenAI-compatible endpoints (e.g. SAIA)
-    don't advertise TTS models in /models, so the only reliable check is a real call."""
+    don't advertise TTS models in /models, so the only reliable check is a real call.
+
+    Only a real "no TTS here" answer (404/400 — the endpoint understood the request
+    and rejected the model/capability) is cached. Transient failures (timeout, rate
+    limit, connection error) report "no" for this one request without latching a
+    permanent negative, since those say nothing about whether TTS is actually supported."""
     global _openai_tts_capability
     if _openai_tts_capability is not None:
         return _openai_tts_capability
-    try:
+
+    import asyncio
+    import openai as _openai
+
+    def _do():
         _get_openai_client().audio.speech.create(
             model=os.getenv("TTS_MODEL", "tts-1").strip(),
             input="Test",
             voice=os.getenv("TTS_VOICE", "alloy").strip(),
             response_format="wav",
         )
+
+    loop = asyncio.get_event_loop()
+    try:
+        await loop.run_in_executor(None, _do)
         _openai_tts_capability = True
-    except Exception:
+    except (_openai.NotFoundError, _openai.BadRequestError):
         _openai_tts_capability = False
+    except Exception:
+        return False
     return _openai_tts_capability
+
+
+# The subtype in a MIME type doesn't always match the file extension Whisper-family
+# APIs expect (e.g. "audio/mpeg" -> .mp3, not .mpeg, which most endpoints reject).
+_MIME_SUBTYPE_TO_EXT = {"mpeg": "mp3", "wave": "wav", "x-wav": "wav"}
 
 
 async def _openai_transcribe(audio_bytes: bytes, mime_type: str = "audio/webm") -> str:
@@ -375,15 +419,27 @@ async def _openai_transcribe(audio_bytes: bytes, mime_type: str = "audio/webm") 
     import io
 
     clean_mime = (mime_type or "audio/webm").split(";")[0].strip()
-    ext = clean_mime.split("/")[-1]
+    subtype = clean_mime.split("/")[-1]
+    ext = _MIME_SUBTYPE_TO_EXT.get(subtype, subtype)
+    model = os.getenv("TRANSCRIBE_MODEL", "whisper-1").strip()
 
     def _do():
         buf = io.BytesIO(audio_bytes)
         buf.name = f"audio.{ext}"
-        response = _get_openai_client().audio.transcriptions.create(
-            model="whisper-1",
-            file=buf,
-        )
+        try:
+            response = _get_openai_client().audio.transcriptions.create(
+                model=model,
+                file=buf,
+            )
+        except Exception as e:
+            import openai as _openai
+            if isinstance(e, (_openai.NotFoundError, _openai.BadRequestError)):
+                raise RuntimeError(
+                    f"This endpoint doesn't support voice transcription with model '{model}'. "
+                    "Set TRANSCRIBE_MODEL in backend/.env to a model your provider supports, "
+                    "or switch the AI Provider to Gemini for this feature."
+                ) from e
+            raise
         return (response.text or "").strip()
 
     loop = asyncio.get_event_loop()
@@ -427,21 +483,10 @@ def _call_with_image(text_prompt: str, image_bytes: bytes, mime_type: str = "ima
 
 # ── Client lifecycle ───────────────────────────────────────────────────────────
 
-def reinit_client(api_key: str = "", base_url: str = "", model: str = "", provider: str = ""):
-    """Re-initialise clients after a settings update (no restart needed)."""
+def reinit_client():
+    """Force lazy clients to be rebuilt on next use, after a settings update has
+    already written the new values into os.environ (no restart needed)."""
     global _gemini_client, _openai_client, _openai_tts_capability
-    if provider:
-        os.environ["PROVIDER"] = provider
-    if api_key:
-        # Determine which env var to set based on key format / provider
-        if _get_provider() == "gemini" or provider == "gemini":
-            os.environ["GEMINI_API_KEY"] = api_key
-        else:
-            os.environ["API_KEY"] = api_key
-    if base_url:
-        os.environ["API_BASE_URL"] = base_url
-    if model:
-        os.environ["MODEL"] = model
     _gemini_client = None
     _openai_client = None
     # Endpoint/key changed — the cached "does this OpenAI-compatible endpoint support
@@ -450,7 +495,10 @@ def reinit_client(api_key: str = "", base_url: str = "", model: str = "", provid
 
 
 def test_connection(api_key: str | None = None, base_url: str | None = None, provider: str | None = None) -> dict:
-    """Verify connectivity for the active (or specified) provider."""
+    """Verify connectivity for the active (or specified) provider. Uses the free
+    /models list endpoint for both providers — symmetric with Gemini's check, and
+    it validates the key/base-URL exactly as typed without billing real tokens
+    against a model that may not even be the one the user is about to pick."""
     active = provider or _get_provider()
     try:
         if active == "openai":
@@ -459,19 +507,14 @@ def test_connection(api_key: str | None = None, base_url: str | None = None, pro
             url = base_url or os.getenv("API_BASE_URL", "https://api.openai.com/v1").strip()
             if not key:
                 return {"ok": False, "error": "No API key — enter and save your key first."}
-            client = _openai.OpenAI(api_key=key, base_url=url, timeout=60.0, max_retries=0)
+            client = _openai.OpenAI(api_key=key, base_url=url, timeout=20.0, max_retries=0)
             try:
-                client.chat.completions.create(
-                    model=_get_openai_model(),
-                    messages=[{"role": "user", "content": "ping"}],
-                    max_tokens=1,
-                )
+                for _ in client.models.list():
+                    break
             except _openai.AuthenticationError:
                 return {"ok": False, "error": "Authentication failed — your API key was rejected. Check that the key is correct and has not expired."}
-            except _openai.NotFoundError:
-                return {"ok": False, "error": f"Model '{_get_openai_model()}' not found on this endpoint. Update the Model field to a model supported by your provider."}
             except _openai.APIConnectionError as e:
-                return {"ok": False, "error": f"Cannot reach endpoint — check the Base URL is correct. ({e})"}
+                return {"ok": False, "error": f"Cannot reach endpoint — check the Base URL is correct. ({_safe_error(e)})"}
         else:
             from google import genai
             key = api_key or os.getenv("GEMINI_API_KEY", "").strip()
@@ -482,7 +525,7 @@ def test_connection(api_key: str | None = None, base_url: str | None = None, pro
                 break
         return {"ok": True}
     except Exception as e:
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": _safe_error(e)}
 
 
 # ── JSON parsing ───────────────────────────────────────────────────────────────
@@ -1203,18 +1246,16 @@ async def generate_tts(text: str, voice: str | None = None) -> tuple[bytes, str]
     the free tier; (3) gTTS, which needs no key and never rate-limits, as the universal
     last-resort fallback so voice generation always works regardless of provider setup.
     """
-    if _get_provider() == "openai" and _check_openai_tts_capability():
+    if _get_provider() == "openai" and await _check_openai_tts_capability():
         return await _openai_tts(text, voice), "audio/wav"
 
     if os.getenv("GEMINI_API_KEY", "").strip():
         try:
             return await _gemini_tts(text, voice or "Aoede"), "audio/wav"
-        except Exception:
-            pass  # quota/rate-limited or otherwise unavailable — fall through to gTTS
+        except Exception as e:
+            # quota/rate-limited or otherwise unavailable — fall through to gTTS,
+            # but don't let the cause disappear silently
+            print(f"Gemini TTS failed, falling back to gTTS: {_safe_error(e)}")
 
     from services.tts_service import synthesize
     return synthesize(text, lang="de"), "audio/mpeg"
-
-
-# Legacy alias
-gemini_tts = generate_tts

@@ -56,17 +56,25 @@ def _write_env(updates: dict):
         f.writelines(new_lines)
 
 
-def _get_active_key(env: dict) -> str:
-    """Return the API key, preferring API_KEY over legacy GEMINI_API_KEY."""
-    return env.get("API_KEY", "").strip() or env.get("GEMINI_API_KEY", "").strip()
-
-
 def _mask_key(raw_key: str) -> str:
     if not raw_key:
         return ""
-    if len(raw_key) > 8:
-        return raw_key[:8] + "•" * max(0, len(raw_key) - 12) + raw_key[-4:]
-    return raw_key[:4] + "•" * (len(raw_key) - 4)
+    n = len(raw_key)
+    if n <= 4:
+        return "•" * n
+    if n <= 12:
+        # Too short to safely show a first-8/last-4 split without overlap —
+        # only reveal the last 4 characters.
+        return "•" * (n - 4) + raw_key[-4:]
+    return raw_key[:8] + "•" * (n - 12) + raw_key[-4:]
+
+
+def _validate_env_value(name: str, value: str) -> None:
+    """Reject values that would corrupt the .env file's line structure (e.g. a
+    newline that lets an attacker inject an extra KEY=value line, such as a
+    redirected API_BASE_URL) or otherwise can't safely round-trip."""
+    if "\n" in value or "\r" in value:
+        raise HTTPException(400, f"{name} cannot contain newlines")
 
 
 class SettingsUpdateRequest(BaseModel):
@@ -93,6 +101,8 @@ class TestConnectionRequest(BaseModel):
 
 @router.get("")
 def get_settings():
+    from services.ai_service import _get_provider
+
     env = _read_env()
 
     gemini_key = env.get("GEMINI_API_KEY", "").strip()
@@ -112,8 +122,11 @@ def get_settings():
         "model": env.get("MODEL", "gpt-4o-mini"),
         "tts_model": env.get("TTS_MODEL", "tts-1"),
         "tts_voice": env.get("TTS_VOICE", "alloy"),
-        # Active provider
+        # The user's explicit choice, if any ("" means auto-detect)
         "provider": env.get("PROVIDER", ""),
+        # What auto-detect actually resolves to right now — this is what's
+        # really in effect when "provider" above is "" (see _get_provider)
+        "effective_provider": _get_provider(),
     }
 
 
@@ -123,36 +136,46 @@ def update_settings(req: SettingsUpdateRequest):
 
     if req.gemini_api_key is not None:
         val = req.gemini_api_key.strip()
+        _validate_env_value("gemini_api_key", val)
         updates["GEMINI_API_KEY"] = val
         os.environ["GEMINI_API_KEY"] = val
 
     if req.api_key is not None:
         val = req.api_key.strip()
+        _validate_env_value("api_key", val)
         updates["API_KEY"] = val
         os.environ["API_KEY"] = val
 
     if req.api_base_url is not None:
         val = req.api_base_url.strip()
+        _validate_env_value("api_base_url", val)
+        if val and not (val.startswith("http://") or val.startswith("https://")):
+            raise HTTPException(400, "Base URL must start with http:// or https://")
         updates["API_BASE_URL"] = val
         os.environ["API_BASE_URL"] = val
 
     if req.model is not None:
         val = req.model.strip()
+        _validate_env_value("model", val)
         updates["MODEL"] = val
         os.environ["MODEL"] = val
 
     if req.tts_model is not None:
         val = req.tts_model.strip()
+        _validate_env_value("tts_model", val)
         updates["TTS_MODEL"] = val
         os.environ["TTS_MODEL"] = val
 
     if req.tts_voice is not None:
         val = req.tts_voice.strip()
+        _validate_env_value("tts_voice", val)
         updates["TTS_VOICE"] = val
         os.environ["TTS_VOICE"] = val
 
     if req.provider is not None:
         val = req.provider.strip().lower()
+        if val not in ("", "gemini", "openai"):
+            raise HTTPException(400, "provider must be 'gemini', 'openai', or empty")
         updates["PROVIDER"] = val
         os.environ["PROVIDER"] = val
 
@@ -178,7 +201,7 @@ def list_all_models():
     """Prefetch every selectable model (Gemini + whatever the saved OpenAI-compatible
     endpoint reports) so the frontend can render one unified dropdown without the user
     having to trigger a fetch themselves."""
-    from services.ai_service import fetch_openai_models
+    from services.ai_service import fetch_openai_models, _safe_error
     env = _read_env()
     gemini_key = env.get("GEMINI_API_KEY", "").strip()
     openai_key = env.get("API_KEY", "").strip()
@@ -196,7 +219,7 @@ def list_all_models():
         try:
             result["openai_models"] = fetch_openai_models(openai_key, base_url)
         except Exception as e:
-            result["openai_error"] = str(e)
+            result["openai_error"] = _safe_error(e)
     return result
 
 
@@ -227,8 +250,14 @@ def reset_usage():
 
 @router.delete("/gemini-key")
 def delete_gemini_key():
+    updates = {"GEMINI_API_KEY": ""}
     os.environ.pop("GEMINI_API_KEY", None)
-    _write_env({"GEMINI_API_KEY": ""})
+    if os.environ.get("PROVIDER", "").strip().lower() == "gemini":
+        # Explicit choice pointed at the key we just removed — fall back to
+        # auto-detect instead of leaving every AI call broken.
+        updates["PROVIDER"] = ""
+        os.environ["PROVIDER"] = ""
+    _write_env(updates)
     try:
         from services.ai_service import reinit_client
         reinit_client()
@@ -239,8 +268,12 @@ def delete_gemini_key():
 
 @router.delete("/api-key")
 def delete_api_key():
+    updates = {"API_KEY": ""}
     os.environ.pop("API_KEY", None)
-    _write_env({"API_KEY": ""})
+    if os.environ.get("PROVIDER", "").strip().lower() == "openai":
+        updates["PROVIDER"] = ""
+        os.environ["PROVIDER"] = ""
+    _write_env(updates)
     try:
         from services.ai_service import reinit_client
         reinit_client()

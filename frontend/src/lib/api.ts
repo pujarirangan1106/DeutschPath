@@ -183,6 +183,7 @@ export const getSettings = () =>
     tts_model: string;
     tts_voice: string;
     provider: string;
+    effective_provider: string;
   }>("/settings");
 
 export const saveSettings = (data: {
@@ -236,7 +237,6 @@ export const getUsage = () =>
     estimated_cost_usd: number;
     text_cost_usd: number;
     tts_cost_usd: number;
-    model: string;
   }>("/settings/usage");
 
 export const resetUsage = () =>

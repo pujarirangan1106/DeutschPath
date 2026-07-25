@@ -380,7 +380,8 @@
       "reset": "Failed to reset. Please try again.",
       "delete": "Failed to delete. Please try again.",
       "authFailed": "Authentication failed — check your API key is correct and saved.",
-      "saveUiLang": "Couldn't save your language choice, but it's applied for this session."
+      "saveUiLang": "Couldn't save your language choice, but it's applied for this session.",
+      "saveProvider": "Couldn't switch provider — try again."
     },
     "uiLang": {
       "heading": "App Language",
@@ -508,7 +509,12 @@
       "baseUrlExamples": "Examples:",
       "modelPickedNote": "Model is picked in the <b>Active Model</b> selector above once a key is saved.",
       "noKeySetAdd": "No key set — add one below.",
-      "couldNotLoadModels": "Could not load models"
+      "couldNotLoadModels": "Could not load models",
+      "geminiOptionLabel": "Gemini (Google)",
+      "tabGemini": "Gemini",
+      "tabOpenai": "OpenAI-compatible",
+      "keyRequiredFirst": "Enter an API key first",
+      "invalidBaseUrl": "Base URL must start with http:// or https://"
     }
   },
   "cases": {

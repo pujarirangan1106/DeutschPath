@@ -28,6 +28,18 @@ _EMPTY = {
     "tts_calls": 0,
     "tts_input_tokens": 0,
     "tts_output_tokens": 0,
+    # Gemini-only subtotals. Pricing below is Gemini-specific, and an
+    # OpenAI-compatible endpoint can be anything from free (Ollama) to a
+    # different per-token rate we have no way to know from a user-supplied
+    # API_BASE_URL — so cost is estimated from these, never from the
+    # provider-mixed totals above.
+    "gemini_calls": 0,
+    "gemini_input_tokens": 0,
+    "gemini_output_tokens": 0,
+    "gemini_thought_tokens": 0,
+    "gemini_tts_calls": 0,
+    "gemini_tts_input_tokens": 0,
+    "gemini_tts_output_tokens": 0,
 }
 
 
@@ -37,6 +49,23 @@ def _read() -> dict:
     try:
         with open(USAGE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
+            if "gemini_calls" not in data:
+                # This file predates provider-specific tracking. The app was
+                # Gemini-only before multi-provider support existed, so all of
+                # its historical totals are honestly Gemini's — backfill them
+                # rather than let cost estimates silently drop to zero while
+                # the token totals still show real history.
+                data["gemini_calls"]             = data.get("calls", 0)
+                data["gemini_input_tokens"]       = data.get("input_tokens", 0)
+                data["gemini_output_tokens"]      = data.get("output_tokens", 0)
+                data["gemini_thought_tokens"]     = data.get("thought_tokens", 0)
+                data["gemini_tts_calls"]          = data.get("tts_calls", 0)
+                data["gemini_tts_input_tokens"]   = data.get("tts_input_tokens", 0)
+                data["gemini_tts_output_tokens"]  = data.get("tts_output_tokens", 0)
+                for k, v in _EMPTY.items():
+                    data.setdefault(k, v)
+                _write(data)
+                return data
             for k, v in _EMPTY.items():
                 data.setdefault(k, v)
             return data
@@ -49,22 +78,31 @@ def _write(data: dict):
         json.dump(data, f)
 
 
-def record(input_tokens: int, output_tokens: int, thought_tokens: int = 0):
+def record(input_tokens: int, output_tokens: int, thought_tokens: int = 0, provider: str = "gemini"):
     with _lock:
         data = _read()
         data["calls"] += 1
         data["input_tokens"] += input_tokens
         data["output_tokens"] += output_tokens
         data["thought_tokens"] += thought_tokens
+        if provider == "gemini":
+            data["gemini_calls"] += 1
+            data["gemini_input_tokens"] += input_tokens
+            data["gemini_output_tokens"] += output_tokens
+            data["gemini_thought_tokens"] += thought_tokens
         _write(data)
 
 
-def record_tts(input_tokens: int, output_tokens: int):
+def record_tts(input_tokens: int, output_tokens: int, provider: str = "gemini"):
     with _lock:
         data = _read()
         data["tts_calls"] += 1
         data["tts_input_tokens"] += input_tokens
         data["tts_output_tokens"] += output_tokens
+        if provider == "gemini":
+            data["gemini_tts_calls"] += 1
+            data["gemini_tts_input_tokens"] += input_tokens
+            data["gemini_tts_output_tokens"] += output_tokens
         _write(data)
 
 
@@ -77,14 +115,24 @@ def get_stats() -> dict:
     tts_in      = data["tts_input_tokens"]
     tts_out     = data["tts_output_tokens"]
 
+    # Cost is estimated from Gemini-only token counts — we have no pricing
+    # table for an arbitrary user-supplied OpenAI-compatible endpoint, so
+    # showing a dollar figure derived from its token counts would fabricate
+    # a number rather than report one.
+    g_input_tok   = data["gemini_input_tokens"]
+    g_output_tok  = data["gemini_output_tokens"]
+    g_thought_tok = data["gemini_thought_tokens"]
+    g_tts_in      = data["gemini_tts_input_tokens"]
+    g_tts_out     = data["gemini_tts_output_tokens"]
+
     text_cost = (
-        input_tok   / 1_000_000 * TEXT_INPUT_PER_M +
-        output_tok  / 1_000_000 * TEXT_OUTPUT_PER_M +
-        thought_tok / 1_000_000 * TEXT_THOUGHT_PER_M
+        g_input_tok   / 1_000_000 * TEXT_INPUT_PER_M +
+        g_output_tok  / 1_000_000 * TEXT_OUTPUT_PER_M +
+        g_thought_tok / 1_000_000 * TEXT_THOUGHT_PER_M
     )
     tts_cost = (
-        tts_in  / 1_000_000 * TTS_INPUT_PER_M +
-        tts_out / 1_000_000 * TTS_OUTPUT_PER_M
+        g_tts_in  / 1_000_000 * TTS_INPUT_PER_M +
+        g_tts_out / 1_000_000 * TTS_OUTPUT_PER_M
     )
     return {
         "calls":              data["calls"],
@@ -98,7 +146,6 @@ def get_stats() -> dict:
         "estimated_cost_usd": round(text_cost + tts_cost, 6),
         "text_cost_usd":      round(text_cost, 6),
         "tts_cost_usd":       round(tts_cost, 6),
-        "model":              "gemini-2.5-flash",
     }
 
 

@@ -31,6 +31,66 @@ const SECONDARY_LANGUAGES = SUPPORTED_LANGUAGES.filter((l) => l.code !== "en");
 type TestState = "idle" | "testing" | "ok" | "error";
 type DangerState = "idle" | "confirming" | "loading" | "done";
 
+function KeyStatusBadge({
+  isSet, masked, confirmDel, onConfirmDel, onCancelDel, onDelete, deleting, error,
+}: {
+  isSet: boolean; masked: string; confirmDel: boolean;
+  onConfirmDel: () => void; onCancelDel: () => void;
+  onDelete: () => void; deleting: boolean; error: string;
+}) {
+  const t = useTranslations("settings");
+  return (
+    <>
+      {isSet && masked && (
+        <div className="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-2 rounded-lg border border-emerald-100 dark:border-emerald-900/40">
+          <Check size={14} className="shrink-0" />
+          <span className="flex-1">{t("apiKey.currentKey")} <code className="font-mono" dir="ltr">{masked}</code></span>
+          {confirmDel ? (
+            <>
+              <span className="text-xs text-red-600 dark:text-red-400 font-medium">{t("apiKey.removeThisKey")}</span>
+              <button onClick={onDelete} disabled={deleting}
+                className="flex items-center gap-1 px-2.5 py-1 bg-red-500 text-white text-xs font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition-colors">
+                {deleting ? <Loader2 size={11} className="animate-spin" /> : null} {t("apiKey.yesRemove")}
+              </button>
+              <button onClick={onCancelDel} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 px-1">{t("common.cancel")}</button>
+            </>
+          ) : (
+            <button onClick={onConfirmDel} title={t("apiKey.removeKeyTitle")}
+              className="p-1 rounded-lg text-emerald-400 dark:text-emerald-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+              <X size={14} />
+            </button>
+          )}
+        </div>
+      )}
+      {!isSet && (
+        <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 rounded-lg border border-amber-100 dark:border-amber-900/40">
+          <Key size={14} className="shrink-0" />
+          {t("provider.noKeySetAdd")}
+        </div>
+      )}
+      {error && <p className="text-xs text-red-500">{error}</p>}
+    </>
+  );
+}
+
+function TestButton({ state, error, onTest, disabled }: { state: TestState; error: string; onTest: () => void; disabled: boolean }) {
+  const t = useTranslations("settings");
+  return (
+    <>
+      <button onClick={onTest} disabled={state === "testing" || disabled}
+        className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-semibold rounded-xl transition-colors shrink-0 ${
+          state === "ok"    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
+          : state === "error" ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40"
+        }`}>
+        {state === "testing" ? <Loader2 size={14} className="animate-spin" /> : state === "ok" ? <Check size={14} /> : <Zap size={14} />}
+        {state === "testing" ? t("apiKey.testing") : state === "ok" ? t("apiKey.connected") : t("apiKey.test")}
+      </button>
+      {state === "error" && error && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{error}</p>}
+    </>
+  );
+}
+
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const router = useRouter();
@@ -42,7 +102,15 @@ export default function SettingsPage() {
   const [uiLangError, setUiLangError] = useState("");
 
   // ── Provider ──────────────────────────────────────────────────────────────
+  // `provider` tracks which provider is actually active on the backend (used
+  // for the usage/cost display below). `panelTab` only controls which of the
+  // two key-entry panels is visible/editable — kept separate so a user with
+  // only a Gemini key can still open the OpenAI panel to add one, without
+  // that panel already having to be the active provider first.
   const [provider, setProviderState] = useState<"gemini" | "openai">("gemini");
+  const [panelTab, setPanelTab] = useState<"gemini" | "openai">("gemini");
+  const [providerSwitching, setProviderSwitching] = useState(false);
+  const [providerSwitchError, setProviderSwitchError] = useState("");
 
   // ── Gemini key ────────────────────────────────────────────────────────────
   const [geminiKey, setGeminiKey]           = useState("");
@@ -119,17 +187,19 @@ export default function SettingsPage() {
       setOpenaiMasked(d.api_key_masked);
       if (d.api_base_url) setOpenaiBaseUrl(d.api_base_url);
       if (d.model)        setOpenaiModel(d.model);
-      setProviderState((d.provider === "openai" ? "openai" : "gemini"));
+      const effective = d.effective_provider === "openai" ? "openai" : "gemini";
+      setProviderState(effective);
+      setPanelTab(effective);
     }).catch(() => {});
     getUsage().then(setUsage).catch(() => {});
     getProfile().then((p) => { if (p.daily_goal_words) setDailyGoal(p.daily_goal_words); }).catch(() => {});
     refreshModels();
   }, []);
 
-  type ModelOption = { key: string; id: string; label: string; sublabel?: string; vision?: boolean; kind: "gemini" | "openai" };
+  type ModelOption = { key: string; id: string; label: string; vision?: boolean; kind: "gemini" | "openai" };
 
   const modelOptions: ModelOption[] = [
-    { key: "gemini", id: "gemini", label: "Gemini (Google)", sublabel: "gemini-2.5-flash", kind: "gemini" },
+    { key: "gemini", id: "gemini", label: t("provider.geminiOptionLabel"), kind: "gemini" },
     ...openaiModels.map((m) => ({ key: `openai:${m.id}`, id: m.id, label: m.id, vision: m.vision, kind: "openai" as const })),
   ];
   const selectedModelKey = provider === "gemini" ? "gemini" : `openai:${openaiModel}`;
@@ -139,13 +209,26 @@ export default function SettingsPage() {
 
   const handleSelectModel = async (opt: ModelOption) => {
     setModelQuery(""); setModelDropdownOpen(false);
-    if (opt.kind === "gemini") {
-      setProviderState("gemini");
-      try { await saveSettings({ provider: "gemini" }); } catch { /* silent */ }
-    } else {
-      setOpenaiModel(opt.id);
-      setProviderState("openai");
-      try { await saveSettings({ provider: "openai", model: opt.id }); } catch { /* silent */ }
+    setProviderSwitchError("");
+    setProviderSwitching(true);
+    try {
+      if (opt.kind === "gemini") {
+        await saveSettings({ provider: "gemini" });
+        setProviderState("gemini");
+        setPanelTab("gemini");
+      } else {
+        await saveSettings({ provider: "openai", model: opt.id });
+        setOpenaiModel(opt.id);
+        setProviderState("openai");
+        setPanelTab("openai");
+      }
+    } catch (e: any) {
+      // Don't touch provider/panelTab — the backend didn't switch, so the UI
+      // must keep showing whatever is actually still active.
+      setProviderSwitchError(e.message || t("errors.saveProvider"));
+      setTimeout(() => setProviderSwitchError(""), 6000);
+    } finally {
+      setProviderSwitching(false);
     }
   };
 
@@ -192,6 +275,16 @@ export default function SettingsPage() {
     }
   };
 
+  // Deleting a key can silently change which provider is actually active on
+  // the backend (see delete_gemini_key/delete_api_key resetting PROVIDER to
+  // auto-detect) — resync so the UI doesn't keep showing the old one.
+  const syncEffectiveProvider = () => {
+    getSettings().then((d) => {
+      const effective = d.effective_provider === "openai" ? "openai" : "gemini";
+      setProviderState(effective);
+    }).catch(() => {});
+  };
+
   const handleDeleteGemini = async () => {
     if (!geminiConfirmDel) { setGeminiConfirmDel(true); return; }
     setGeminiDeleting(true); setGeminiError("");
@@ -199,17 +292,27 @@ export default function SettingsPage() {
       await deleteGeminiKey();
       setGeminiKeySet(false); setGeminiMasked(""); setGeminiConfirmDel(false);
       refreshModels();
+      syncEffectiveProvider();
     } catch (e: any) { setGeminiError(e.message || t("errors.removeKey")); }
     finally { setGeminiDeleting(false); }
   };
 
   // ── OpenAI handlers ───────────────────────────────────────────────────────
   const handleSaveOpenai = async () => {
+    if (!openaiKeySet && !openaiKey.trim()) {
+      setOpenaiError(t("provider.keyRequiredFirst"));
+      return;
+    }
+    const trimmedBaseUrl = openaiBaseUrl.trim();
+    if (trimmedBaseUrl && !/^https?:\/\//.test(trimmedBaseUrl)) {
+      setOpenaiError(t("provider.invalidBaseUrl"));
+      return;
+    }
     setOpenaiSaving(true); setOpenaiError("");
     try {
       const payload: Record<string, string> = {};
       if (openaiKey.trim())     payload.api_key      = openaiKey.trim();
-      if (openaiBaseUrl.trim()) payload.api_base_url = openaiBaseUrl.trim();
+      if (trimmedBaseUrl)       payload.api_base_url = trimmedBaseUrl;
       if (openaiModel.trim())   payload.model        = openaiModel.trim();
       await saveSettings(payload);
       if (openaiKey.trim()) {
@@ -220,6 +323,7 @@ export default function SettingsPage() {
       }
       setOpenaiSaved(true);
       refreshModels();
+      syncEffectiveProvider();
       setTimeout(() => setOpenaiSaved(false), 3000);
     } catch (e: any) { setOpenaiError(e.message || t("errors.saveKey")); }
     finally { setOpenaiSaving(false); }
@@ -249,6 +353,7 @@ export default function SettingsPage() {
       await deleteApiKey();
       setOpenaiKeySet(false); setOpenaiMasked(""); setOpenaiConfirmDel(false);
       refreshModels();
+      syncEffectiveProvider();
     } catch (e: any) { setOpenaiError(e.message || t("errors.removeKey")); }
     finally { setOpenaiDeleting(false); }
   };
@@ -334,61 +439,6 @@ export default function SettingsPage() {
   };
 
   const secondLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === secondaryCode);
-
-  // ── Reusable sub-components ───────────────────────────────────────────────
-  const KeyStatusBadge = ({
-    isSet, masked, confirmDel, onConfirmDel, onCancelDel, onDelete, deleting, error,
-  }: {
-    isSet: boolean; masked: string; confirmDel: boolean;
-    onConfirmDel: () => void; onCancelDel: () => void;
-    onDelete: () => void; deleting: boolean; error: string;
-  }) => (
-    <>
-      {isSet && masked && (
-        <div className="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-2 rounded-lg border border-emerald-100 dark:border-emerald-900/40">
-          <Check size={14} className="shrink-0" />
-          <span className="flex-1">{t("apiKey.currentKey")} <code className="font-mono" dir="ltr">{masked}</code></span>
-          {confirmDel ? (
-            <>
-              <span className="text-xs text-red-600 dark:text-red-400 font-medium">{t("apiKey.removeThisKey")}</span>
-              <button onClick={onDelete} disabled={deleting}
-                className="flex items-center gap-1 px-2.5 py-1 bg-red-500 text-white text-xs font-semibold rounded-lg hover:bg-red-600 disabled:opacity-50 transition-colors">
-                {deleting ? <Loader2 size={11} className="animate-spin" /> : null} {t("apiKey.yesRemove")}
-              </button>
-              <button onClick={onCancelDel} className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 px-1">{t("common.cancel")}</button>
-            </>
-          ) : (
-            <button onClick={onConfirmDel} title={t("apiKey.removeKeyTitle")}
-              className="p-1 rounded-lg text-emerald-400 dark:text-emerald-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-              <X size={14} />
-            </button>
-          )}
-        </div>
-      )}
-      {!isSet && (
-        <div className="flex items-center gap-2 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 px-3 py-2 rounded-lg border border-amber-100 dark:border-amber-900/40">
-          <Key size={14} className="shrink-0" />
-          {t("provider.noKeySetAdd")}
-        </div>
-      )}
-      {error && <p className="text-xs text-red-500">{error}</p>}
-    </>
-  );
-
-  const TestButton = ({ state, error, onTest, disabled }: { state: TestState; error: string; onTest: () => void; disabled: boolean }) => (
-    <>
-      <button onClick={onTest} disabled={state === "testing" || disabled}
-        className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-semibold rounded-xl transition-colors shrink-0 ${
-          state === "ok"    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-          : state === "error" ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40"
-        }`}>
-        {state === "testing" ? <Loader2 size={14} className="animate-spin" /> : state === "ok" ? <Check size={14} /> : <Zap size={14} />}
-        {state === "testing" ? t("apiKey.testing") : state === "ok" ? t("apiKey.connected") : t("apiKey.test")}
-      </button>
-      {state === "error" && error && <p className="text-xs text-red-500 dark:text-red-400 mt-1">{error}</p>}
-    </>
-  );
 
   // ─────────────────────────────────────────────────────────────────────────
   return (
@@ -522,13 +572,37 @@ export default function SettingsPage() {
             )}
           </div>
           {modelsError && <p className="text-[10px] text-red-500 dark:text-red-400 mt-1">{modelsError}</p>}
+          {providerSwitchError && <p className="text-[10px] text-red-500 dark:text-red-400 mt-1">{providerSwitchError}</p>}
           <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
             {t("provider.visionHint")}
           </p>
         </div>
 
+        {/* ── Panel tab switch — independent of which provider is actually
+             active, so a key can always be added for either provider ── */}
+        <div className="flex gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setPanelTab("gemini")}
+            className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              panelTab === "gemini" ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" : "text-slate-500 dark:text-slate-400"
+            }`}
+          >
+            {t("provider.tabGemini")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setPanelTab("openai")}
+            className={`flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+              panelTab === "openai" ? "bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm" : "text-slate-500 dark:text-slate-400"
+            }`}
+          >
+            {t("provider.tabOpenai")}
+          </button>
+        </div>
+
         {/* ── Gemini section ── */}
-        <div className={`space-y-4 transition-opacity ${provider === "gemini" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
+        <div className={`space-y-4 transition-opacity ${panelTab === "gemini" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
           <div className="flex items-center gap-2">
             <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800" />
             <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t("apiKey.heading")}</span>
@@ -593,7 +667,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ── OpenAI-compatible section ── */}
-        <div className={`space-y-4 transition-opacity ${provider === "openai" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
+        <div className={`space-y-4 transition-opacity ${panelTab === "openai" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
           <div className="flex items-center gap-2">
             <div className="h-px flex-1 bg-slate-100 dark:bg-slate-800" />
             <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t("provider.openaiApiTitle")}</span>
